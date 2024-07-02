@@ -1,2 +1,0 @@
-# Karfa
-bet against adventure 
