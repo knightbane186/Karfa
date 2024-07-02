@@ -2,7 +2,10 @@
 module.exports = {
   content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      //here I can add my primary colours and fonts 
+      // colors:{}
+    },
   },
   plugins: [],
 }
