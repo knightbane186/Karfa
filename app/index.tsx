@@ -1,62 +1,28 @@
-// import { StatusBar } from 'expo-status-bar';
-// import { Text, View, ScrollView } from 'react-native';
-// import { Link } from 'expo-router';
-// import { SafeAreaView } from 'react-native-safe-area-context';
-
-
-
-// export default function App() {
-//   return (
-// <SafeAreaView className="bg-customBlack h-full">
-//   <ScrollView contentContainerStyle={{height:'100%'}}>
-//     <View className="w-full justify-center items-center h-full px-4">
-
-//     </View>
-
-//   </ScrollView>
-
-// </SafeAreaView>
-//   );
-// }
-
-// import { StatusBar } from 'expo-status-bar';
-// import { Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
-// import { Link } from 'expo-router';
-// import { SafeAreaView } from 'react-native-safe-area-context';
-
-// export default function App() {
-//   return (
-//     <SafeAreaView className="bg-black h-full">
-//       <ScrollView contentContainerStyle={{height:'100%'}}>
-//         <View className="w-full justify-center items-center h-full px-4">
-//           <Text className="text-green-500 text-4xl mb-2">frogit</Text>
-//           <Text className="text-white text-lg mb-8">Everything outdoor ever|</Text>
-          
-//           <TouchableOpacity className="w-full bg-white rounded-md py-3 mb-4">
-//             <Text className="text-black text-center font-semibold">Continue with Apple</Text>
-//           </TouchableOpacity>
-          
-//           <TouchableOpacity className="w-full bg-white rounded-md py-3 mb-4">
-//             <Text className="text-black text-center font-semibold">Continue with Google</Text>
-//           </TouchableOpacity>
-          
-//           <TouchableOpacity className="w-full bg-gray-800 rounded-md py-3 mb-4">
-//             <Text className="text-white text-center font-semibold">Sign up with email</Text>
-//           </TouchableOpacity>
-          
-//           <TouchableOpacity className="w-full border border-gray-700 rounded-md py-3">
-//             <Text className="text-white text-center font-semibold">Log in</Text>
-//           </TouchableOpacity>
-//         </View>
-//       </ScrollView>
-//     </SafeAreaView>
-//   );
-// }
 
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import MaskedView from '@react-native-masked-view/masked-view';
+
+const GradientText = ({ text, style }) => (
+  <MaskedView
+    maskElement={
+      <Text style={[style, { backgroundColor: 'transparent' }]}>
+        {text}
+      </Text>
+    }
+  >
+    <LinearGradient
+      colors={['#82EE16', '#535151']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+    >
+      <Text style={[style, { opacity: 0 }]}>{text}</Text>
+    </LinearGradient>
+  </MaskedView>
+);
 
 export default function App() {
   const [text, setText] = useState('');
@@ -87,7 +53,14 @@ export default function App() {
     <SafeAreaView className="bg-black h-full">
       <ScrollView contentContainerStyle={{height:'100%'}}>
         <View className="w-full items-left relative h-full top-[343px] px-4">
-          <Text className="text-green-500 font-isemibold text-4xl mb-2 text-left">frogit</Text>
+          <GradientText 
+            text="frogit" 
+            style={{ 
+              fontSize: 48, 
+              fontFamily: 'imedium',
+              fontWeight: '500'  // Adjust this if needed
+            }} 
+          />
           <Text className="text-white text-lg mb-8 text-left">{text}</Text>
           
           <TouchableOpacity className="w-full bg-white rounded-md py-3 mb-4 flex-row justify-center items-center">
