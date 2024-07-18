@@ -1,13 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import { Tabs, Redirect } from 'expo-router'
 
-const AuthLayout = () => {
+const Authlayout = () => {
   return (
     <View>
-      <Text>AuthLayout</Text>
+      <Text>Authlayout</Text>
     </View>
   )
 }
 
-export default AuthLayout
+export default Authlayout
