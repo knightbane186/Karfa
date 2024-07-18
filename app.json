@@ -28,12 +28,7 @@
     },
     "plugins": [
       "expo-router",
-      [
-        "expo-font",
-        {
-          "fonts": ["./assets/fonts/Inter-VariableFont_slnt,wght.ttf"]
-        }
-      ]
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
