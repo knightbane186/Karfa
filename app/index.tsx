@@ -48,7 +48,8 @@ export default function App() {
     }
     return () => clearInterval(interval);
   }, [isTyping]);
-// just adding the basiocs to type this up but to what end
+// just adding the basics/s creen time is done 
+
   return (
     <SafeAreaView className="bg-black h-full">
       <ScrollView contentContainerStyle={{height:'100%'}}>
