@@ -14,5 +14,5 @@ const signIn = () => {
 
 </SafeAreaView>
 }
-
+adding the basic
 export default signIn
