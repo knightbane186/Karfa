@@ -15,4 +15,5 @@ const signIn = () => {
 </SafeAreaView>
 }
 adding the basic
+//this feesl so lowkey stupid, that i cant even focus on th ebascis 
 export default signIn
