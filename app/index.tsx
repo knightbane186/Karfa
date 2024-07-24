@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 
+
 const GradientText = ({ text, style }) => (
   <MaskedView
     maskElement={
@@ -66,6 +67,7 @@ export default function App() {
           
           <TouchableOpacity className="w-full bg-white rounded-md py-3 mb-4 flex-row justify-center items-center">
             {/* <Image source={require('./path-to-your-apple-logo.png')} className="w-5 h-5 mr-2" /> */}
+
             <Text className="text-black text-center font-semibold">Continue with Apple</Text>
           </TouchableOpacity>
           
