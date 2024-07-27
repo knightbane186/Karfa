@@ -27,6 +27,11 @@ const GradientText = ({ text, style }) => (
   </MaskedView>
 );
 
+// interface GradientTextProps {
+//   text: string;
+//   style: any;
+// }
+
 export default function App() {
   const [text, setText] = useState('');
   const fullText = 'Everything outdoor ever|';
