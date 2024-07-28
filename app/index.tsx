@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,13 +9,13 @@ import CustomButton from '@/components/CustomButton';
 
 interface GradientTextProps {
   text: string;
-  style: string;
+  style: any;
 }
 
 const GradientText: React.FC<GradientTextProps> = ({ text, style }) => (
   <MaskedView
     maskElement={
-      <Text className={style}>
+      <Text style={[style, { backgroundColor: 'transparent' }]}>
         {text}
       </Text>
     }
@@ -24,7 +25,7 @@ const GradientText: React.FC<GradientTextProps> = ({ text, style }) => (
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
     >
-      <Text className={`${style} opacity-0`}>{text}</Text>
+      <Text style={[style, { opacity: 0 }]}>{text}</Text>
     </LinearGradient>
   </MaskedView>
 );
@@ -55,32 +56,36 @@ const App: React.FC = () => {
   }, [isTyping]);
 
   return (
-    <SafeAreaView className="bg-black h-full">
+    <SafeAreaView style={{ backgroundColor: 'black', height: '100%' }}>
       <ScrollView contentContainerStyle={{ height: '100%' }}>
-        <View className="w-full items-left relative h-full top-[343px] px-4">
+        <View style={{ width: '100%', alignItems: 'flex-start', position: 'relative', height: '100%', top: 343, paddingHorizontal: 16 }}>
           <GradientText 
             text="frogit" 
-            style="text-4xl font-medium text-green-500"
+            style={{ 
+              fontSize: 48, 
+              fontFamily: 'imedium',
+              fontWeight: '500',  // Adjust this if needed
+            }} 
           />
-          <Text className="text-white text-lg mb-8 text-left">{text}</Text>
+          <Text style={{ color: 'white', fontSize: 18, marginBottom: 32, textAlign: 'left' }}>{text}</Text>
           
-          <TouchableOpacity className="w-full bg-white rounded-md py-3 mb-4 flex-row justify-center items-center">
-            <Text className="text-black text-center font-semibold">Continue with Apple</Text>
+          <TouchableOpacity style={{ width: '100%', backgroundColor: 'white', borderRadius: 8, paddingVertical: 12, marginBottom: 16, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: 'black', textAlign: 'center', fontWeight: '600' }}>Continue with Apple</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity className="w-full bg-white rounded-md py-3 mb-4 flex-row justify-center items-center">
-            <Text className="text-black text-center font-semibold">Continue with Google</Text>
+          <TouchableOpacity style={{ width: '100%', backgroundColor: 'white', borderRadius: 8, paddingVertical: 12, marginBottom: 16, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: 'black', textAlign: 'center', fontWeight: '600' }}>Continue with Google</Text>
           </TouchableOpacity>
 
           <CustomButton
             title="Continue with email"
             handlePress={() => router.push('/sign-in')}
-            containerStyles="w-full bg-gray-800"
-            textStyles="text-white"
+            containerStyles="w-full bg-gray-800 rounded-md py-3 mb-4 flex-row justify-center items-center"
+            textStyles="text-white text-center font-semibold"
           />
           
-          <TouchableOpacity className="w-full border border-gray-700 rounded-md py-3">
-            <Text className="text-white text-center font-semibold">Log in</Text>
+          <TouchableOpacity style={{ width: '100%', borderWidth: 1, borderColor: '#374151', borderRadius: 8, paddingVertical: 12 }}>
+            <Text style={{ color: 'white', textAlign: 'center', fontWeight: '600' }}>Log in</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -92,25 +97,29 @@ export default App;
 
 
 
-//this wasn't the gradeitn
 
+
+
+
+// the gradeint works with this: 
 // import React, { useState, useEffect } from 'react';
-// import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
+// import { StatusBar } from 'expo-status-bar';
+// import { Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
 // import { SafeAreaView } from 'react-native-safe-area-context';
 // import { LinearGradient } from 'expo-linear-gradient';
 // import MaskedView from '@react-native-masked-view/masked-view';
-// import { router } from 'expo-router';
+// import { Redirect, router } from 'expo-router';
 // import CustomButton from '@/components/CustomButton';
 
 // interface GradientTextProps {
 //   text: string;
-//   style: string;
+//   style: any;
 // }
 
 // const GradientText: React.FC<GradientTextProps> = ({ text, style }) => (
 //   <MaskedView
 //     maskElement={
-//       <Text className={style}>
+//       <Text style={[style, { backgroundColor: 'transparent' }]}>
 //         {text}
 //       </Text>
 //     }
@@ -120,7 +129,7 @@ export default App;
 //       start={{ x: 0, y: 0 }}
 //       end={{ x: 1, y: 0 }}
 //     >
-//       <Text className={`${style} opacity-0`}>{text}</Text>
+//       <Text style={[style, { opacity: 0 }]}>{text}</Text>
 //     </LinearGradient>
 //   </MaskedView>
 // );
@@ -151,32 +160,37 @@ export default App;
 //   }, [isTyping]);
 
 //   return (
-//     <SafeAreaView className="bg-black h-full">
+//     <SafeAreaView style={{ backgroundColor: 'black', height: '100%' }}>
 //       <ScrollView contentContainerStyle={{ height: '100%' }}>
-//         <View className="w-full items-left relative h-full top-[343px] px-4">
+//         <View style={{ width: '100%', alignItems: 'flex-start', position: 'relative', height: '100%', top: 343, paddingHorizontal: 16 }}>
 //           <GradientText 
 //             text="frogit" 
-//             style="text-4xl font-medium text-green-500"
+//             style={{ 
+//               fontSize: 48, 
+//               fontFamily: 'imedium',
+//               fontWeight: '500',  // Adjust this if needed
+//             }} 
 //           />
-//           <Text className="text-white text-lg mb-8 text-left">{text}</Text>
+//           <Text style={{ color: 'white', fontSize: 18, marginBottom: 32, textAlign: 'left' }}>{text}</Text>
           
-//           <TouchableOpacity className="w-full bg-white rounded-md py-3 mb-4 flex-row justify-center items-center">
-//             <Text className="text-black text-center font-semibold">Continue with Apple</Text>
+//           <TouchableOpacity style={{ width: '100%', backgroundColor: 'white', borderRadius: 8, paddingVertical: 12, marginBottom: 16, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+//             {/* <Image source={require('./path-to-your-apple-logo.png')} style={{ width: 20, height: 20, marginRight: 8 }} /> */}
+//             <Text style={{ color: 'black', textAlign: 'center', fontWeight: '600' }}>Continue with Apple</Text>
 //           </TouchableOpacity>
           
-//           <TouchableOpacity className="w-full bg-white rounded-md py-3 mb-4 flex-row justify-center items-center">
-//             <Text className="text-black text-center font-semibold">Continue with Google</Text>
+//           <TouchableOpacity style={{ width: '100%', backgroundColor: 'white', borderRadius: 8, paddingVertical: 12, marginBottom: 16, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+//             {/* <Image source={require('./path-to-your-google-logo.png')} style={{ width: 20, height: 20, marginRight: 8 }} /> */}
+//             <Text style={{ color: 'black', textAlign: 'center', fontWeight: '600' }}>Continue with Google</Text>
 //           </TouchableOpacity>
 
 //           <CustomButton
 //             title="Continue with email"
 //             handlePress={() => router.push('/sign-in')}
-//             containerStyles="w-full bg-gray-800 flex-row rounded-md py-3 mb-4"
-//             textStyles="text-white text-center font-semibold"
+//             containerStyles={{ width: '100%', backgroundColor: '#4B5563', borderRadius: 8, paddingVertical: 12, marginBottom: 16 }}
 //           />
           
-//           <TouchableOpacity className="w-full border border-gray-700 rounded-md py-3">
-//             <Text className="text-white text-center font-semibold">Log in</Text>
+//           <TouchableOpacity style={{ width: '100%', borderWidth: 1, borderColor: '#374151', borderRadius: 8, paddingVertical: 12 }}>
+//             <Text style={{ color: 'white', textAlign: 'center', fontWeight: '600' }}>Log in</Text>
 //           </TouchableOpacity>
 //         </View>
 //       </ScrollView>
@@ -191,16 +205,7 @@ export default App;
 
 
 
-
-
-
-
-
-
-
-
-
-
+// THE GRADEINT IN THIS FILE WORKS
 // import React, { useState, useEffect } from 'react';
 // import { StatusBar } from 'expo-status-bar';
 // import { Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
