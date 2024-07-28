@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 
 interface CustomButtonProps {
@@ -14,10 +14,10 @@ const CustomButton: React.FC<CustomButtonProps> = ({ title, handlePress, contain
     <TouchableOpacity
       onPress={handlePress}
       activeOpacity={0.7}
-      className={`bg-secondary rounded-xl min-h-[33px] justify-center items-center ${containerStyles} ${isLoading ? 'opacity-50' : ''}`}
+      className={`rounded-md py-3 mb-4 flex-row justify-center items-center ${containerStyles} ${isLoading ? 'opacity-50' : ''}`}
       disabled={isLoading}
     >
-      <Text className={`text-primary font-pregular text-lg ${textStyles}`}>
+      <Text className={`text-center font-semibold ${textStyles}`}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -25,6 +25,43 @@ const CustomButton: React.FC<CustomButtonProps> = ({ title, handlePress, contain
 };
 
 export default CustomButton;
+
+
+
+
+
+
+
+
+
+
+// import { View, Text, TouchableOpacity } from 'react-native';
+// import React from 'react';
+
+// interface CustomButtonProps {
+//   title: string;
+//   handlePress: () => void;
+//   containerStyles?: string;
+//   textStyles?: string;
+//   isLoading?: boolean;
+// }
+
+// const CustomButton: React.FC<CustomButtonProps> = ({ title, handlePress, containerStyles, textStyles, isLoading }) => {
+//   return (
+//     <TouchableOpacity
+//       onPress={handlePress}
+//       activeOpacity={0.7}
+//       className={`bg-secondary rounded-md min-h-[22px] justify-center items-center flex-row ${containerStyles} ${isLoading ? 'opacity-50' : ''}`}
+//       disabled={isLoading}
+//     >
+//       <Text className={`text-primary font-semibold text-lg ${textStyles}`}>
+//         {title}
+//       </Text>
+//     </TouchableOpacity>
+//   );
+// };
+
+// export default CustomButton;
 
 
 
