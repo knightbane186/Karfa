@@ -6,8 +6,8 @@ import { Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
-
-
+import { Redirect, router } from 'expo-router';
+import CustomButton from '@/components/CustomButton';
 
 const GradientText = ({ text, style }) => (
   <MaskedView
@@ -91,6 +91,12 @@ export default function App() {
           <TouchableOpacity className="w-full border border-gray-700 rounded-md py-3">
             <Text className="text-white text-center font-semibold">Log in</Text>
           </TouchableOpacity>
+          <CustomButton
+title = 'Continue with email'
+handlePress={() => router.push('/sign-in')}
+containerStyles = 'w-full mt-7'
+/>
+
         </View>
       </ScrollView>
     </SafeAreaView>
