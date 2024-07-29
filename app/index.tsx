@@ -6,6 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { router } from 'expo-router';
 import CustomButton from '@/components/CustomButton';
+import { Link } from 'expo-router';
 
 interface GradientTextProps {
   text: string;
@@ -86,8 +87,11 @@ const App: React.FC = () => {
             textStyles="text-white text-center font-semibold"
           />
           
-          <TouchableOpacity style={{ width: '100%', borderWidth: 1, borderColor: '#374151', borderRadius: 8, paddingVertical: 12 }}>
+          <TouchableOpacity             style={{ width: '100%', borderWidth: 1, borderColor: '#374151', borderRadius: 8, paddingVertical: 12 }} 
+            onPress={() => router.push('/(tabs)/home')}
+>
             <Text style={{ color: 'white', textAlign: 'center', fontWeight: '600' }}>Log in</Text>
+            {/* <Link href="/(tabs)/home" className='text-red-400'>Home Page</Link> */}
           </TouchableOpacity>
         </View>
       </ScrollView>

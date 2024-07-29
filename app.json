@@ -28,8 +28,8 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font",
-      "react-native-reanimated"
+      "expo-font"
+
     ],
     "experiments": {
       "typedRoutes": true
