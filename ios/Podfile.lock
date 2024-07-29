@@ -5,6 +5,8 @@ PODS:
   - DoubleConversion (1.1.6)
   - EXConstants (16.0.2):
     - ExpoModulesCore
+  - EXLocation (17.0.1):
+    - ExpoModulesCore
   - Expo (51.0.22):
     - ExpoModulesCore
   - ExpoAsset (10.0.10):
@@ -74,15 +76,13 @@ PODS:
   - hermes-engine (0.74.2):
     - hermes-engine/Pre-built (= 0.74.2)
   - hermes-engine/Pre-built (0.74.2)
-  - MapboxCommon (23.10.1)
-  - MapboxCoreMaps (10.18.0):
-    - MapboxCommon (~> 23.10)
-  - MapboxMaps (10.18.2):
-    - MapboxCommon (= 23.10.1)
-    - MapboxCoreMaps (= 10.18.0)
-    - MapboxMobileEvents (= 1.0.10)
-    - Turf (= 2.8.0)
-  - MapboxMobileEvents (1.0.10)
+  - MapboxCommon (24.0.0)
+  - MapboxCoreMaps (11.0.0):
+    - MapboxCommon (~> 24.0)
+  - MapboxMaps (11.0.0):
+    - MapboxCommon (= 24.0.0)
+    - MapboxCoreMaps (= 11.0.0)
+    - Turf (= 2.7.0)
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -1266,13 +1266,13 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - rnmapbox-maps (10.1.28):
-    - MapboxMaps (~> 10.18.2)
+    - MapboxMaps (= 11.0.0)
     - React
     - React-Core
     - rnmapbox-maps/DynamicLibrary (= 10.1.28)
     - Turf
   - rnmapbox-maps/DynamicLibrary (10.1.28):
-    - MapboxMaps (~> 10.18.2)
+    - MapboxMaps (= 11.0.0)
     - React
     - React-Core
     - Turf
@@ -1320,7 +1320,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - SocketRocket (0.7.0)
-  - Turf (2.8.0)
+  - Turf (2.7.0)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1328,6 +1328,7 @@ DEPENDENCIES:
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
+  - EXLocation (from `../node_modules/expo-location/ios`)
   - Expo (from `../node_modules/expo`)
   - ExpoAsset (from `../node_modules/expo-asset/ios`)
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
@@ -1405,7 +1406,6 @@ SPEC REPOS:
     - MapboxCommon
     - MapboxCoreMaps
     - MapboxMaps
-    - MapboxMobileEvents
     - SocketRocket
     - Turf
 
@@ -1418,6 +1418,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EXConstants:
     :path: "../node_modules/expo-constants/ios"
+  EXLocation:
+    :path: "../node_modules/expo-location/ios"
   Expo:
     :path: "../node_modules/expo"
   ExpoAsset:
@@ -1563,6 +1565,7 @@ SPEC CHECKSUMS:
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   EXConstants: 409690fbfd5afea964e5e9d6c4eb2c2b59222c59
+  EXLocation: 43e9b582ca63a23c6f0a18d8cbe2145b3a388b55
   Expo: 8b7948e45627e848c2d7b6be7cf5851a505aef19
   ExpoAsset: 323700f291684f110fb55f0d4022a3362ea9f875
   ExpoFileSystem: 80bfe850b1f9922c16905822ecbf97acd711dc51
@@ -1578,10 +1581,9 @@ SPEC CHECKSUMS:
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: fdfdfe5479092de0c4bdbebedd9056951f092c4f
   hermes-engine: 01d3e052018c2a13937aca1860fbedbccd4a41b7
-  MapboxCommon: 0ff437e44988da6856e280d00ffb266564ed0487
-  MapboxCoreMaps: f1bd9405f5b9d3e343f2fe4138775299699a22fb
-  MapboxMaps: e76b14f52c54c40b76ddecd04f40448e6f35a864
-  MapboxMobileEvents: de50b3a4de180dd129c326e09cd12c8adaaa46d6
+  MapboxCommon: 0cca816960ad2d21c86e1d32435fcb412cfdcf4f
+  MapboxCoreMaps: 633f5ecd7580a6d1342ff20cc8732170b2cd7ba3
+  MapboxMaps: 1c219108691a2000cb842b02e64d82158d74e6cd
   RCT-Folly: 02617c592a293bd6d418e0a88ff4ee1f88329b47
   RCTDeprecation: e989346ee1f1a0e6c155ac0969f7834b043b2f08
   RCTRequired: 194626909cfa8d39ca6663138c417bc6c431648c
@@ -1632,13 +1634,13 @@ SPEC CHECKSUMS:
   ReactCommon: ecad995f26e0d1e24061f60f4e5d74782f003f12
   RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
   RNGestureHandler: 2282cfbcf86c360d29f44ace393203afd5c6cff7
-  rnmapbox-maps: fe8c3204993ed3678f2c31b4b6ba55474e0c5899
+  rnmapbox-maps: 078602d8a6cca5906c94b1f6158d08917a03d10e
   RNReanimated: 35f9ac9c3ac42d0497ebd1cce5c39d7687a8493e
   RNScreens: b32a9ff15bea7fcdbe5dff6477bc503f792b1208
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
-  Turf: aa2ede4298009639d10db36aba1a7ebaad072a5e
+  Turf: 13d1a92d969ca0311bbc26e8356cca178ce95da2
   Yoga: ae3c32c514802d30f687a04a6a35b348506d411f
 
-PODFILE CHECKSUM: eb7988f7a7c4d5c9c8cfa9b15062c0a16c3aed05
+PODFILE CHECKSUM: 9e876ba066a23777c6ec42516f47fe5b7eb931f8
 
 COCOAPODS: 1.12.1

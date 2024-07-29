@@ -1,12 +1,19 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import Map from '@/components/Map';
 
-const home = () => {
+const Home = () => {
   return (
-    <View>
-      <Text>home</Text>
+    <View style={styles.container}>
+      <Map />
     </View>
-  )
+  );
 }
 
-export default home
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
+
+export default Home;
