@@ -13,13 +13,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.knightbane186.Karfa"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.knightbane186.Karfa"
     },
     "web": {
       "bundler": "metro",
@@ -28,8 +30,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
-
+      "expo-font",
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiZGVudmVyMCIsImEiOiJjbHo2eTI0YnEwMzZkMmpvZXQ4MGk1OWthIn0.ak-vD94wFcHCnUuO4_h_1Q",
+          "RNMapboxMapsVersion": "11.0.0"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
