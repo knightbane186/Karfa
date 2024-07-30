@@ -21,6 +21,7 @@ export default function Map() {
     );
 }
 //making sur ethat the phassi are registered
+//I dont know what this is though
 
 const styles = StyleSheet.create({
     container: {
