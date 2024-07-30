@@ -1,7 +1,6 @@
 
-
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, } from 'react-native';
 import Mapbox, { Çamera, MapView, Camera, LocationPuck } from '@rnmapbox/maps';
 
 const accessToken = 'pk.eyJ1IjoiZGVudmVyMCIsImEiOiJjbHo2cXNsMXYwMTd2MmxxMHRoN2luaWVuIn0.5MQnpgOV6Nv4DfCeXppPnw';
@@ -21,6 +20,7 @@ export default function Map() {
         </View>
     );
 }
+//making sur ethat the phassi are registered
 
 const styles = StyleSheet.create({
     container: {
