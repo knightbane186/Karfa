@@ -14,14 +14,12 @@ export default function Map() {
             scrollEnabled={true}
                 pitchEnabled={true}
                 rotateEnabled={true}>
-               <Camera followUserLocation/> 
-               <LocationPuck/>
+               <Camera followUserLocation /> 
+               <LocationPuck puckBearingEnabled puckBearing="heading" pulsing={{isEnabled:true}}/>
                 </MapView>
         </View>
     );
 }
-//making sur ethat the phassi are registered
-//I dont know what this is though
 
 const styles = StyleSheet.create({
     container: {
