@@ -1,5 +1,6 @@
 
 // this sinmore accurate but lets see
+//srtill the basis doesnt change.
 
 // import React, { useEffect, useState } from 'react';
 // import { StyleSheet, View, Text } from 'react-native';
