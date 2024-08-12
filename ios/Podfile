@@ -13,8 +13,8 @@ install! 'cocoapods',
 
 prepare_react_native_project!
 
-# @generated begin @rnmapbox/maps-rnmapboxmapsimpl - expo prebuild (DO NOT MODIFY) sync-07ce863f27cdf8cf931ab8aee8ba2969df55eee2
-$RNMapboxMapsDownloadToken = 'sk.eyJ1IjoiZGVudmVyMCIsImEiOiJjbHo2eTI0YnEwMzZkMmpvZXQ4MGk1OWthIn0.ak-vD94wFcHCnUuO4_h_1Q'
+# @generated begin @rnmapbox/maps-rnmapboxmapsimpl - expo prebuild (DO NOT MODIFY) sync-1afbabfaa5b181a516d191b47e83ff0a628763bc
+$RNMapboxMapsDownloadToken = 'sk.eyJ1IjoiZGVudmVyMCIsImEiOiJjbHpxeXZidzEwd2ppMmpvbXpvdzl6NzdlIn0.hpLiowTKopstCGJbe_8gHg'
 $RNMapboxMapsVersion = '11.0.0'
 # @generated end @rnmapbox/maps-rnmapboxmapsimpl
 target 'Karfa' do
