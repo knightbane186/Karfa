@@ -4,6 +4,8 @@ import { Tabs } from 'expo-router';
 import { icons } from '@/constants';
 import dummyData from '../data/dummyData'; // Correct path to dummy data
 import CourtCard from '@/components/CountCard'; // Correct path to CourtCard component
+//should i import map logic for search background?
+//move search logic to a diffrent page
 
 interface TabIconProps {
   icon: any;
