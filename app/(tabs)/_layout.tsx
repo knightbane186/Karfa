@@ -6,16 +6,19 @@ import { icons } from '@/constants';
 const TabIcon = ({ icon, color, name, focused }) => {
   return (
     <View className="items-center justify-center gap-2">
-      <Image source={icon}
-      resizeMode='contain'
-      tintColor={color}
-      className='w-6 h-6'
+      <Image
+        source={icon}
+        resizeMode="contain"
+        tintColor={color}
+        className="w-6 h-6"
       />
       <Text
-      className={`${focused ? 'font-psemibold': 'font-pregular'}text-xs`}
-      style={{color:color}}
+        className={`${
+          focused ? 'font-psemibold' : 'font-pregular'
+        } text-xs`}
+        style={{ color: color }}
       >
-{name}
+        {name}
       </Text>
     </View>
   );
@@ -25,19 +28,28 @@ const TabsLayout = () => {
   return (
     <>
       <Tabs
-      screenOptions={{
-        tabBarShowLabel: false,
-        tabBarActiveTintColor: '#ffa001',
-        tabBarInactiveTintColor: '#cdcde0',
-        tabBarStyle:{
-          backgroundColor:'#161622',
-          borderTopWidth:1,
-          borderTopColor: '#232533',
-          height:84,
-        }
-      }}
+        screenOptions={{
+          tabBarShowLabel: false,
+          tabBarActiveTintColor: '#ffa001',
+          tabBarInactiveTintColor: '#cdcde0',
+          tabBarStyle: {
+            position: 'absolute',
+            bottom: 20, 
+            left: 20, 
+            right: 20, 
+            backgroundColor: '#161622',
+            borderTopWidth: 1,
+            borderTopColor: '#232533',
+            height: 84,
+            borderRadius: 35, // Make the tab bar fully rounded
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.1,
+            shadowRadius: 20,
+            elevation: 10, // This is for Android shadow
+          },
+        }}
       >
-
         <Tabs.Screen
           name="home"
           options={{
@@ -83,7 +95,7 @@ const TabsLayout = () => {
             ),
           }}
         />
-                <Tabs.Screen
+        <Tabs.Screen
           name="inbox"
           options={{
             title: 'Inbox',
@@ -92,7 +104,7 @@ const TabsLayout = () => {
               <TabIcon
                 icon={icons.play}
                 color={color}
-                name="Create"
+                name="Inbox"
                 focused={focused}
               />
             ),
