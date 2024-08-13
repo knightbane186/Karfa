@@ -194,17 +194,31 @@ const TabsLayout: React.FC = () => {
   );
 };
 
+
+
 const styles = StyleSheet.create({
   headerContainer: {
+    position: 'absolute',
+    top: 45, // Adjust the top position as needed
+    left: 20,
+    right: 20,
+    // backgroundColor: '#fff', // Make sure the header has a background
+    borderRadius: 25,
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    shadowColor: '#00',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 10, // for Android shadow
+    zIndex: 1000, // Ensure it stays on top of the map
   },
   searchContainer: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: '#f0f0f0',
     borderRadius: 25,
     padding: 10,
     flex: 1,
@@ -264,13 +278,93 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.1,
     shadowRadius: 20,
-    elevation: 10, // for android shadow
+    elevation: 10, // for Android shadow
   },
   listContainer: {
     paddingHorizontal: 20,
     paddingBottom: 20,
+    paddingTop:120,
   },
 });
+
+// const styles = StyleSheet.create({
+//   headerContainer: {
+//     paddingHorizontal: 20,
+//     paddingTop: 50,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'space-between',
+//     opacity: ,
+//   },
+//   searchContainer: {
+//     flexDirection: 'row',
+//     backgroundColor: '#fff',
+//     borderRadius: 25,
+//     padding: 10,
+//     flex: 1,
+//     marginRight: 10,
+//     alignItems: 'center',
+//   },
+//   searchInput: {
+//     flex: 1,
+//     padding: 5,
+//     fontSize: 16,
+//   },
+//   searchIcon: {
+//     width: 20,
+//     height: 20,
+//     tintColor: '#ffa001',
+//   },
+//   sideButton: {
+//     backgroundColor: '#ffa001',
+//     borderRadius: 50,
+//     padding: 10,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   sideButtonIcon: {
+//     width: 20,
+//     height: 20,
+//     tintColor: '#fff',
+//   },
+//   tabIconContainer: {
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     gap: 2,
+//   },
+//   icon: {
+//     width: 24,
+//     height: 24,
+//   },
+//   focusedText: {
+//     fontFamily: 'psemibold',
+//     fontSize: 10,
+//   },
+//   regularText: {
+//     fontFamily: 'pregular',
+//     fontSize: 10,
+//   },
+//   tabBarStyle: {
+//     position: 'absolute',
+//     bottom: 20,
+//     left: 20,
+//     right: 20,
+//     backgroundColor: '#161622',
+//     borderTopWidth: 1,
+//     borderTopColor: '#232533',
+//     height: 84,
+//     borderRadius: 35,
+//     shadowColor: '#000',
+//     shadowOffset: { width: 0, height: 10 },
+//     shadowOpacity: 0.1,
+//     shadowRadius: 20,
+//     elevation: 10, // for android shadow
+//   },
+//   listContainer: {
+//     paddingHorizontal: 20,
+//     paddingBottom: 20,
+//   },
+// });
 
 export default TabsLayout;
 
