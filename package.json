@@ -17,6 +17,8 @@
   "dependencies": {
     "@expo-google-fonts/inter": "^0.2.3",
     "@expo/vector-icons": "^14.0.2",
+    "@react-native-community/datetimepicker": "^8.2.0",
+    "@react-native-community/slider": "^4.5.2",
     "@react-native-masked-view/masked-view": "0.3.1",
     "@react-navigation/native": "^6.0.2",
     "@rnmapbox/maps": "^10.1.28",
