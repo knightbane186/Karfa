@@ -142,7 +142,7 @@ const TabsLayout: React.FC = () => {
                 <TabIcon
                   icon={icons.search}
                   color={color}
-                  name="Create"
+                  name="Search"
                   focused={focused}
                 />
               ),
