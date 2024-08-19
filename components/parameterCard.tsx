@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, TextInput, Text, TouchableOpacity, StyleSheet, Platform, Dimensions } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Slider from '@react-native-community/slider';
 
 interface ParameterCardProps {
-  onSearch: (searchQuery: string, distance: number, selectedDate: Date, availability: string) => void;
+  onSearch: (searchQuery: string, distance: number, selectedDate: Date, availability: string, selectedTime: number) => void;
   onClose: () => void;
 }
 
@@ -12,44 +13,98 @@ const ParameterCard: React.FC<ParameterCardProps> = ({ onSearch, onClose }) => {
   const [distance, setDistance] = useState<number>(25);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [availability, setAvailability] = useState<string>('available');
+  const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+  const [selectedTime, setSelectedTime] = useState<number>(12); // Initial time set to 12 PM
 
   const handleSearch = () => {
-    onSearch(searchQuery, distance, selectedDate, availability);
+    onSearch(searchQuery, distance, selectedDate, availability, selectedTime);
+  };
+
+  const handleDateChange = (event: any, date?: Date) => {
+    setShowDatePicker(false);
+    if (date) {
+      setSelectedDate(date);
+    }
+  };
+
+  const formatTime = (hour: number): string => {
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+    return `${formattedHour} ${period}`;
   };
 
   return (
     <View style={styles.card}>
+      {/* Location Label and Input */}
+      <Text style={styles.label}>Location</Text>
       <TextInput
-        placeholder="Location"
+        placeholder="Enter location"
         value={searchQuery}
         onChangeText={setSearchQuery}
         style={styles.inputField}
       />
 
       <View style={styles.row}>
-        <TextInput placeholder="Date" style={styles.smallInputField} />
-        <TextInput placeholder="No. of people" style={styles.smallInputField} />
+        {/* Date Picker Trigger */}
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Date</Text>
+          <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.smallInputField}>
+            <Text>{selectedDate.toDateString()}</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Number of People Input */}
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>No. of People</Text>
+          <TextInput placeholder="e.g. 4" style={styles.smallInputField} keyboardType="numeric" />
+        </View>
       </View>
 
-      <Text style={styles.label}>Time: 12pm-6pm</Text>
-
+      {/* Time Slider */}
       <View style={styles.sliderContainer}>
-        <Text style={styles.sliderLabel}>Price/per person: ${distance}</Text>
+        <Text>Time: {formatTime(selectedTime)}</Text>
         <Slider
           style={styles.slider}
-          minimumValue={1}
-          maximumValue={100}
-          value={distance}
-          onValueChange={(value) => setDistance(value)}
+          minimumValue={7} // 7 AM
+          maximumValue={23} // 11 PM
+          step={1} // Step is one hour
+          value={selectedTime}
+          onValueChange={setSelectedTime}
           thumbTintColor="#f87171"
           minimumTrackTintColor="#f87171"
           maximumTrackTintColor="#f87171"
         />
       </View>
 
+      {/* Price Slider */}
+      <View style={styles.sliderContainer}>
+        <Text>Price/per person: ${distance}</Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={1}
+          maximumValue={100}
+          value={distance}
+          onValueChange={setDistance}
+          thumbTintColor="#f87171"
+          minimumTrackTintColor="#f87171"
+          maximumTrackTintColor="#f87171"
+        />
+      </View>
+
+      {/* Submit Button */}
       <TouchableOpacity style={styles.submitButton} onPress={handleSearch}>
         <Text style={styles.submitButtonText}>Frogit</Text>
       </TouchableOpacity>
+
+      {/* DateTimePicker Component */}
+      {showDatePicker && (
+        <DateTimePicker
+          value={selectedDate}
+          mode="date"
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+          onChange={handleDateChange}
+        />
+      )}
     </View>
   );
 };
@@ -71,34 +126,27 @@ const styles = StyleSheet.create({
   inputField: {
     backgroundColor: '#f2f2f2',
     borderRadius: 8,
-    padding: 12,
-    marginBottom: 15,
-    fontSize: 16,
+    padding: 10,
+    marginBottom: 10,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 15,
+    marginBottom: 10,
   },
   smallInputField: {
     flex: 0.48,
     backgroundColor: '#f2f2f2',
     borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
+    padding: 10,
   },
   label: {
-    marginBottom: 15,
-    fontSize: 16,
-    fontWeight: '500',
+    marginBottom: 5,
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   sliderContainer: {
-    marginBottom: 20,
-  },
-  sliderLabel: {
     marginBottom: 10,
-    fontSize: 16,
-    fontWeight: '500',
   },
   slider: {
     width: '100%',
