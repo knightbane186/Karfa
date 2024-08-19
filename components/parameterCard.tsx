@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, Slider } from 'react-native';
+import { View, TextInput, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import Slider from '@react-native-community/slider';
 
 interface ParameterCardProps {
   onSearch: (searchQuery: string, distance: number, selectedDate: Date, availability: string) => void;
