@@ -1,23 +1,49 @@
 
-// SearchLogic.tsx
+
+
+// searchLogic.tsx
 import dummyData from '../data/dummyData';
 
-interface SearchLogicProps {
-  query: string;
-}
+const searchLogic = (query: string, distance: number, date: Date, availability: string) => {
+  try {
+    // Filter data based on the query and parameters
+    const filtered = dummyData.filter((item) => {
+      const matchesQuery = query ? item.title.toLowerCase().includes(query.toLowerCase()) : true;
+      const matchesDistance = distance ? item.distance <= distance : true;
+      const matchesAvailability = availability ? item.status.toLowerCase() === availability.toLowerCase() : true;
 
-export const searchLogic = (query: string) => {
-  if (query) {
-    const filtered = dummyData.filter((item) =>
-      item.title.toLowerCase().includes(query.toLowerCase())
-    );
+      // Add any additional filtering logic if necessary (e.g., matching the date)
+      return matchesQuery && matchesDistance && matchesAvailability;
+    });
+
     return filtered;
-  } else {
-    return dummyData;
+  } catch (error) {
+    console.error("Error in searchLogic:", error);
+    return []; // Return an empty array if there's an error
   }
 };
 
 export default searchLogic;
+
+// // SearchLogic.tsx
+// import dummyData from '../data/dummyData';
+
+// interface SearchLogicProps {
+//   query: string;
+// }
+
+// export const searchLogic = (query: string) => {
+//   if (query) {
+//     const filtered = dummyData.filter((item) =>
+//       item.title.toLowerCase().includes(query.toLowerCase())
+//     );
+//     return filtered;
+//   } else {
+//     return dummyData;
+//   }
+// };
+
+// export default searchLogic;
 
 
 
