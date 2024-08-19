@@ -303,10 +303,12 @@ const styles = StyleSheet.create({
   },
   tabIconContainer: {
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
+     // Centering the icons within their container
+    flex: 1, // Ensuring the icons take equal space
   },
   icon: {
-    width: 24,
+    width: 28,
     height: 24,
   },
   focusedText: {
@@ -321,7 +323,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 30,
     left: 0,
-    right: 10,
+    right: 0,
     backgroundColor: '#161622',
     borderTopWidth: 1,
     borderTopColor: '#232533',
@@ -332,7 +334,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 20,
     elevation: 20,
-    zIndex: 0, // Ensure the taskbar stays on top of everything
+    zIndex: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly', // Spacing the icons evenly
+    alignItems: 'center', // Centering the icons vertically
+    paddingHorizontal: 15,
   },
 });
 
