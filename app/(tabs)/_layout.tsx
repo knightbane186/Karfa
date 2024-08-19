@@ -8,6 +8,7 @@ import { icons } from '@/constants';
 import dummyData from '../data/dummyData';
 import CountCard from '@/components/CountCard';
 import searchLogic from '../search/searchLogic';
+import GridButton from '@/components/gridButton';
 
 interface TabIconProps {
   icon: any;
@@ -25,7 +26,7 @@ const TabIcon: React.FC<TabIconProps> = ({ icon, color, name, focused }) => {
   );
 };
 
-const CustomHeader = ({ onSearch }) => {
+const CustomHeader = ({ onSearch, onClose }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [distance, setDistance] = useState<number>(10);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -37,24 +38,27 @@ const CustomHeader = ({ onSearch }) => {
     Keyboard.dismiss(); // Hide the keyboard after search
   };
 
-  const handleCloseParameters = () => {
+  const handleClose = () => {
     setShowParameters(false);
-    Keyboard.dismiss(); // Hide the keyboard when closing parameters
+    onClose(); // This will clear the results as well
   };
 
   return (
     <View style={styles.headerContainer}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholder="Search for a court..."
-          style={styles.searchInput}
-          onFocus={() => setShowParameters(true)}
-        />
-        <TouchableOpacity onPress={handleSearch}>
-          <Image source={icons.search} style={styles.searchIcon} />
-        </TouchableOpacity>
+      <View style={styles.searchRow}>
+        <View style={styles.searchContainer}>
+          <TextInput
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder="Location, User, or Activity"
+            style={styles.searchInput}
+            onFocus={() => setShowParameters(true)}
+          />
+          <TouchableOpacity onPress={handleSearch}>
+            <Image source={icons.search} style={styles.searchIcon} />
+          </TouchableOpacity>
+        </View>
+        <GridButton onPress={() => console.log('Grid button pressed')} />
       </View>
 
       {showParameters && (
@@ -73,7 +77,12 @@ const CustomHeader = ({ onSearch }) => {
           <TouchableOpacity onPress={() => setShowParameters(true)} style={styles.datePickerButton}>
             <Text>Select Date: {selectedDate.toDateString()}</Text>
           </TouchableOpacity>
-          <DateTimePicker value={selectedDate} mode="date" display="default" onChange={(event, date) => date && setSelectedDate(date)} />
+          <DateTimePicker
+            value={selectedDate}
+            mode="date"
+            display="default"
+            onChange={(event, date) => date && setSelectedDate(date)}
+          />
 
           <View style={styles.availabilityContainer}>
             <Text>Availability:</Text>
@@ -89,8 +98,7 @@ const CustomHeader = ({ onSearch }) => {
             <Text style={styles.searchButtonText}>Search</Text>
           </TouchableOpacity>
 
-          {/* Close Button */}
-          <TouchableOpacity style={styles.closeButton} onPress={handleCloseParameters}>
+          <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
             <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
         </>
@@ -110,6 +118,10 @@ const TabsLayout = () => {
     setIsSearching(true);
   };
 
+  const handleClose = () => {
+    setIsSearching(false); // This will hide the search results
+  };
+
   const showHeader = ['/home', '/create'].includes(pathname);
 
   return (
@@ -119,7 +131,7 @@ const TabsLayout = () => {
         {/* Your existing Mapbox Map code */}
       </View>
 
-      {showHeader && <CustomHeader onSearch={handleSearch} />}
+      {showHeader && <CustomHeader onSearch={handleSearch} onClose={handleClose} />}
 
       {isSearching && (
         <View style={styles.listWrapper}>
@@ -127,7 +139,13 @@ const TabsLayout = () => {
             data={filteredData}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <CountCard imageUrl={item.imageUrl} title={item.title} distance={item.distance} status={item.status} price={item.price} />
+              <CountCard
+                imageUrl={item.imageUrl}
+                title={item.title}
+                distance={item.distance}
+                status={item.status}
+                price={item.price}
+              />
             )}
             contentContainerStyle={styles.listContainer}
           />
@@ -175,14 +193,6 @@ const TabsLayout = () => {
             tabBarIcon: ({ color, focused }) => <TabIcon icon={icons.play} color={color} name="Inbox" focused={focused} />,
           }}
         />
-        <Tabs.Screen
-          name="bookmark"
-          options={{
-            title: 'Bookmark',
-            headerShown: false,
-            tabBarIcon: ({ color, focused }) => <TabIcon icon={icons.bookmark} color={color} name="Bookmark" focused={focused} />,
-          }}
-        />
       </Tabs>
     </View>
   );
@@ -201,20 +211,18 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    elevation: 10,
     zIndex: 750, // Reduced zIndex for the search bar
+  },
+  searchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   searchContainer: {
     flexDirection: 'row',
     backgroundColor: '#f0f0f0',
     borderRadius: 25,
     padding: 10,
-    alignItems: 'center',
+    flex: 1, // Allow the search bar to take up available space
   },
   searchInput: {
     flex: 1,
@@ -275,8 +283,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     alignItems: 'center',
-  },
-  closeButtonText: {
+  },  closeButtonText: {
     color: '#000',
   },
   listWrapper: {
@@ -284,7 +291,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 90, // Ensure the list floats over the map
     left: 0,
-    marginBottom:10,
+    marginBottom: 10,
     right: 0,
     bottom: 100, // Cover the full screen height
     zIndex: 200, // Ensure it's above the map but below the taskbar
