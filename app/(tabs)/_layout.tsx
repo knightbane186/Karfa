@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     backgroundColor: '#f0f0f0',
-    borderRadius: 25,
+    borderRadius: 15,
     padding: 10,
     flex: 1, // Allow the search bar to take up available space
   },
@@ -322,13 +322,14 @@ const styles = StyleSheet.create({
   tabBarStyle: {
     position: 'absolute',
     bottom: 30,
-    left: 0,
+    left: 22,
     right: 0,
     backgroundColor: '#161622',
     borderTopWidth: 1,
     borderTopColor: '#232533',
-    height: 84,
-    borderRadius: 25,
+    height: 74,
+    width: 350,
+    borderRadius: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.1,
@@ -336,6 +337,7 @@ const styles = StyleSheet.create({
     elevation: 20,
     zIndex: 0,
     flexDirection: 'row',
+    alignContent:'center',
     justifyContent: 'space-evenly', // Spacing the icons evenly
     alignItems: 'center', // Centering the icons vertically
     paddingHorizontal: 15,

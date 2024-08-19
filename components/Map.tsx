@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     marker: {
-        backgroundColor: 'red',
+        backgroundColor: 'gray',
         padding: 5,
         borderRadius: 5,
     },
