@@ -269,17 +269,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 15,
   },
-  mapContainer: {
-    flex: 1,
-    position: 'absolute',
-    top: 90,
-    left: 0,
-    right: 0,
-    bottom: 104, // Adjusted to account for the tab bar
-    zIndex: 100,
-  },
+  // mapContainer: {
+  //   flex: 1,
+  //   position: 'absolute',
+  //   top: 90,
+  //   left: 0,
+  //   right: 0,
+  //   bottom: 104, // Adjusted to account for the tab bar
+  //   zIndex: 100,
+  // },
   mapPlaceholder: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: 'transparent', // Replace this with your actual map component
   },
 });
