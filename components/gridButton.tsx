@@ -13,7 +13,7 @@ const GridButton = ({ onPress }) => {
 
 const styles = StyleSheet.create({
   gridButton: {
-    backgroundColor: '#ffa001',
+    backgroundColor: 'red',
     borderRadius: 50,
     padding: 10,
     marginLeft: 10,
