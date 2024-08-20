@@ -3,6 +3,7 @@ import { View, TextInput, Text, TouchableOpacity, StyleSheet, Platform, Dimensio
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Slider from '@react-native-community/slider';
 
+
 interface ParameterCardProps {
   onSearch: (searchQuery: string, distance: number, selectedDate: Date, availability: string, selectedTime: number) => void;
   onClose: () => void;

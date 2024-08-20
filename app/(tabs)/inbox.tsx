@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import MessageComponent from '@/components/messageComponent';
+import MessageComponent from '@/components/MessageComponent';
 import NotifiComponent from '@/components/NotifiComponent';
 
 const Inbox = () => {

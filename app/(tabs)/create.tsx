@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Map from '@/components/Map'; // Adjust the path if necessary
@@ -18,7 +19,6 @@ const styles = StyleSheet.create({
 });
 
 export default CreatePage;
-
 
 
 
