@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.1,
-    shadowRadius: 10,
+    shadowRadius: 3,
     elevation: 5,
   },
   inputField: {
