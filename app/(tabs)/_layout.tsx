@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, FlatList, Text, StyleSheet, Image, Keyboard } from 'react-native';
 import { Tabs, usePathname, useRouter } from 'expo-router';
@@ -25,17 +26,16 @@ const TabIcon: React.FC<TabIconProps> = ({ icon, color, name, focused }) => {
   );
 };
 
-const CustomHeader = ({ onSearch, showParameters, setShowParameters, isSearching, setIsSearching }) => {
+const CustomHeader = ({ onSearch, showParameters, setShowParameters, isSearching, setIsSearching, searchQuery, setSearchQuery }) => {
   const router = useRouter();
 
-  const handleSearch = (searchQuery: string, distance: number, selectedDate: Date, availability: string, selectedTime: number) => {
-    onSearch(searchQuery, distance, selectedDate, availability, selectedTime);
+  const handleSearch = (maxPrice: number, selectedDate: Date, availability: string, selectedTime: number) => {
+    onSearch(searchQuery, maxPrice, selectedDate, availability, selectedTime);
     setShowParameters(false);
     setIsSearching(true);
     Keyboard.dismiss();
     router.push('/create');
   };
-
 
   const handleFocus = () => {
     setShowParameters(true);
@@ -50,6 +50,8 @@ const CustomHeader = ({ onSearch, showParameters, setShowParameters, isSearching
             placeholder="Location, User, or Activity"
             style={styles.searchInput}
             onFocus={handleFocus}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
           />
           <TouchableOpacity onPress={handleFocus}>
             <Image source={icons.search} style={styles.searchIcon} />
@@ -68,6 +70,7 @@ const CustomHeader = ({ onSearch, showParameters, setShowParameters, isSearching
             setShowParameters(false);
             setIsSearching(true);
           }} 
+          searchQuery={searchQuery}
         />
       )}
     </View>
@@ -78,10 +81,11 @@ const TabsLayout = () => {
   const [filteredData, setFilteredData] = useState(dummyData);
   const [isSearching, setIsSearching] = useState(false);
   const [showParameters, setShowParameters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const pathname = usePathname();
 
-  const handleSearch = (query: string, distance: number, date: Date, availability: string, selectedTime: number) => {
-    const filtered = searchLogic(query, distance, date, availability, selectedTime);
+  const handleSearch = (query: string, maxPrice: number, date: Date, availability: string, selectedTime: number) => {
+    const filtered = searchLogic(query, maxPrice, date, availability, selectedTime);
     setFilteredData(filtered);
     setIsSearching(true);
     setShowParameters(false);
@@ -98,6 +102,8 @@ const TabsLayout = () => {
           setShowParameters={setShowParameters}
           isSearching={isSearching}
           setIsSearching={setIsSearching}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
         />
       )}
 

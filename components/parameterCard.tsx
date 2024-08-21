@@ -3,23 +3,23 @@ import { View, TextInput, Text, TouchableOpacity, StyleSheet, Platform, Dimensio
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Slider from '@react-native-community/slider';
 
-
 interface ParameterCardProps {
-  onSearch: (searchQuery: string, distance: number, selectedDate: Date, availability: string, selectedTime: number) => void;
+  onSearch: (maxPrice: number, selectedDate: Date, availability: string, selectedTime: number) => void;
   onClose: () => void;
+  searchQuery: string;
 }
 
-const ParameterCard: React.FC<ParameterCardProps> = ({ onSearch, onClose }) => {
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [distance, setDistance] = useState<number>(10);
+const ParameterCard: React.FC<ParameterCardProps> = ({ onSearch, onClose, searchQuery }) => {
+  const [maxPrice, setMaxPrice] = useState<number>(10);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [availability, setAvailability] = useState<string>('available');
+  const [availability, setAvailability] = useState<string>('Available');
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [selectedTime, setSelectedTime] = useState<number>(12); // Initial time set to 12 PM
 
   const handleSearch = () => {
-    onSearch(searchQuery, distance, selectedDate, availability, selectedTime);
+    onSearch(maxPrice, selectedDate, availability, selectedTime);
   };
+
   const handleDateChange = (event: any, date?: Date) => {
     setShowDatePicker(false);
     if (date) {
@@ -35,17 +35,9 @@ const ParameterCard: React.FC<ParameterCardProps> = ({ onSearch, onClose }) => {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.label}>Location, Category, or Title</Text>
-      <TextInput
-        placeholder="Enter search query"
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-        style={styles.inputField}
-      />
-
+      <Text style={styles.label}>Searching for: {searchQuery}</Text>
 
       <View style={styles.row}>
-        {/* Date Picker Trigger */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Date</Text>
           <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.smallInputField}>
@@ -53,14 +45,12 @@ const ParameterCard: React.FC<ParameterCardProps> = ({ onSearch, onClose }) => {
           </TouchableOpacity>
         </View>
 
-        {/* Number of People Input */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>No. of People</Text>
           <TextInput placeholder="e.g. 4" style={styles.smallInputField} keyboardType="numeric" />
         </View>
       </View>
 
-      {/* Time Slider */}
       <View style={styles.sliderContainer}>
         <Text>Time: {formatTime(selectedTime)}</Text>
         <Slider
@@ -76,24 +66,21 @@ const ParameterCard: React.FC<ParameterCardProps> = ({ onSearch, onClose }) => {
         />
       </View>
 
-      {/* Price Slider */}
-{/* Price Slider */}
-<View style={styles.sliderContainer}>
-  <Text>Price/per person: ${distance}</Text>
-  <Slider
-    style={styles.slider}
-    minimumValue={10}
-    maximumValue={100}
-    step={10}
-    value={distance}
-    onValueChange={(value) => setDistance(value)}
-    thumbTintColor="#f87171"
-    minimumTrackTintColor="#f87171"
-    maximumTrackTintColor="#f87171"
-  />
-</View>
+      <View style={styles.sliderContainer}>
+        <Text>Max Price/per person: ${maxPrice}</Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={10}
+          maximumValue={100}
+          step={10}
+          value={maxPrice}
+          onValueChange={(value) => setMaxPrice(value)}
+          thumbTintColor="#f87171"
+          minimumTrackTintColor="#f87171"
+          maximumTrackTintColor="#f87171"
+        />
+      </View>
 
-      {/* Submit Button */}
       <TouchableOpacity style={styles.submitButton} onPress={handleSearch}>
         <Text style={styles.submitButtonText}>Search</Text>
       </TouchableOpacity>
