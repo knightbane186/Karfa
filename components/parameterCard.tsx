@@ -11,7 +11,7 @@ interface ParameterCardProps {
 
 const ParameterCard: React.FC<ParameterCardProps> = ({ onSearch, onClose }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [distance, setDistance] = useState<number>(25);
+  const [distance, setDistance] = useState<number>(10);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [availability, setAvailability] = useState<string>('available');
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
@@ -77,19 +77,21 @@ const ParameterCard: React.FC<ParameterCardProps> = ({ onSearch, onClose }) => {
       </View>
 
       {/* Price Slider */}
-      <View style={styles.sliderContainer}>
-        <Text>Price/per person: ${distance}</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={1}
-          maximumValue={100}
-          value={distance}
-          onValueChange={setDistance}
-          thumbTintColor="#f87171"
-          minimumTrackTintColor="#f87171"
-          maximumTrackTintColor="#f87171"
-        />
-      </View>
+{/* Price Slider */}
+<View style={styles.sliderContainer}>
+  <Text>Price/per person: ${distance}</Text>
+  <Slider
+    style={styles.slider}
+    minimumValue={10}
+    maximumValue={100}
+    step={10}
+    value={distance}
+    onValueChange={(value) => setDistance(value)}
+    thumbTintColor="#f87171"
+    minimumTrackTintColor="#f87171"
+    maximumTrackTintColor="#f87171"
+  />
+</View>
 
       {/* Submit Button */}
       <TouchableOpacity style={styles.submitButton} onPress={handleSearch}>
