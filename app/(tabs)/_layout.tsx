@@ -28,13 +28,14 @@ const TabIcon: React.FC<TabIconProps> = ({ icon, color, name, focused }) => {
 const CustomHeader = ({ onSearch, showParameters, setShowParameters, isSearching, setIsSearching }) => {
   const router = useRouter();
 
-  const handleSearch = (searchQuery: string, distance: number, selectedDate: Date, availability: string) => {
-    onSearch(searchQuery, distance, selectedDate, availability);
+  const handleSearch = (searchQuery: string, distance: number, selectedDate: Date, availability: string, selectedTime: number) => {
+    onSearch(searchQuery, distance, selectedDate, availability, selectedTime);
     setShowParameters(false);
     setIsSearching(true);
     Keyboard.dismiss();
     router.push('/create');
   };
+
 
   const handleFocus = () => {
     setShowParameters(true);
@@ -79,21 +80,14 @@ const TabsLayout = () => {
   const [showParameters, setShowParameters] = useState(false);
   const pathname = usePathname();
 
-  const handleSearch = (query: string, distance: number, date: Date, availability: string) => {
-    const filtered = searchLogic(query, distance, date, availability);
+  const handleSearch = (query: string, distance: number, date: Date, availability: string, selectedTime: number) => {
+    const filtered = searchLogic(query, distance, date, availability, selectedTime);
     setFilteredData(filtered);
     setIsSearching(true);
     setShowParameters(false);
   };
 
   const showHeader = ['/home', '/create'].includes(pathname);
-
-  const handleMapPress = () => {
-    if (showParameters) {
-      setShowParameters(false);
-      setIsSearching(true);
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -106,15 +100,6 @@ const TabsLayout = () => {
           setIsSearching={setIsSearching}
         />
       )}
-
-      <TouchableOpacity 
-        style={styles.mapContainer} 
-        onPress={handleMapPress}
-        activeOpacity={1}
-      >
-        {/* Your map component goes here */}
-        <View style={styles.mapPlaceholder} />
-      </TouchableOpacity>
 
       {isSearching && pathname === '/create' && (
         <View style={styles.listWrapper}>

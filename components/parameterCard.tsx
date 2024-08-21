@@ -20,7 +20,6 @@ const ParameterCard: React.FC<ParameterCardProps> = ({ onSearch, onClose }) => {
   const handleSearch = () => {
     onSearch(searchQuery, distance, selectedDate, availability, selectedTime);
   };
-
   const handleDateChange = (event: any, date?: Date) => {
     setShowDatePicker(false);
     if (date) {
@@ -36,14 +35,14 @@ const ParameterCard: React.FC<ParameterCardProps> = ({ onSearch, onClose }) => {
 
   return (
     <View style={styles.card}>
-      {/* Location Label and Input */}
-      <Text style={styles.label}>Location</Text>
+      <Text style={styles.label}>Location, Category, or Title</Text>
       <TextInput
-        placeholder="Enter location"
+        placeholder="Enter search query"
         value={searchQuery}
         onChangeText={setSearchQuery}
         style={styles.inputField}
       />
+
 
       <View style={styles.row}>
         {/* Date Picker Trigger */}
@@ -94,10 +93,9 @@ const ParameterCard: React.FC<ParameterCardProps> = ({ onSearch, onClose }) => {
 
       {/* Submit Button */}
       <TouchableOpacity style={styles.submitButton} onPress={handleSearch}>
-        <Text style={styles.submitButtonText}>Frogit</Text>
+        <Text style={styles.submitButtonText}>Search</Text>
       </TouchableOpacity>
 
-      {/* DateTimePicker Component */}
       {showDatePicker && (
         <DateTimePicker
           value={selectedDate}

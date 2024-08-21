@@ -1,83 +1,73 @@
-
-
-
-// searchLogic.tsx
+// SearchLogic.tsx
 import dummyData from '../data/dummyData';
 
-const searchLogic = (query: string, distance: number, date: Date, availability: string) => {
+const searchLogic = (
+  query: string, 
+  distance: number, 
+  selectedDate: Date, 
+  availability: string,
+  selectedTime: number
+) => {
   try {
-    // Filter data based on the query and parameters
     const filtered = dummyData.filter((item) => {
-      const matchesQuery = query ? item.title.toLowerCase().includes(query.toLowerCase()) : true;
-      const matchesDistance = distance ? item.distance <= distance : true;
-      const matchesAvailability = availability ? item.status.toLowerCase() === availability.toLowerCase() : true;
+      // Match query with title or category (case-insensitive and exact match)
+      const matchesQuery = query 
+        ? item.title.toLowerCase() === query.toLowerCase() || 
+          item.category.toLowerCase() === query.toLowerCase()
+        : true;
 
-      // Add any additional filtering logic if necessary (e.g., matching the date)
-      return matchesQuery && matchesDistance && matchesAvailability;
+      // Check distance
+      const matchesDistance = distance ? item.distance <= distance : true;
+
+      // Check availability
+      const matchesAvailability = availability 
+        ? item.status.toLowerCase() === availability.toLowerCase() 
+        : true;
+
+      // Check if selected time is within opening hours
+      const itemOpenTime = parseInt(item.openTime.split(':')[0]);
+      const itemCloseTime = parseInt(item.closeTime.split(':')[0]);
+      const isWithinOpenHours = selectedTime >= itemOpenTime && selectedTime < itemCloseTime;
+
+      return matchesQuery && matchesDistance && matchesAvailability && isWithinOpenHours;
     });
+
+    console.log('Filtered results:', filtered); // Add this line for debugging
 
     return filtered;
   } catch (error) {
     console.error("Error in searchLogic:", error);
-    return []; // Return an empty array if there's an error
+    return [];
   }
 };
 
 export default searchLogic;
 
-// // SearchLogic.tsx
+
+
+
+
+// // searchLogic.tsx
 // import dummyData from '../data/dummyData';
 
-// interface SearchLogicProps {
-//   query: string;
-// }
+// const searchLogic = (query: string, distance: number, date: Date, availability: string) => {
+//   try {
+//     // Filter data based on the query and parameters
+//     const filtered = dummyData.filter((item) => {
+//       const matchesQuery = query ? item.title.toLowerCase().includes(query.toLowerCase()) : true;
+//       const matchesDistance = distance ? item.distance <= distance : true;
+//       const matchesAvailability = availability ? item.status.toLowerCase() === availability.toLowerCase() : true;
 
-// export const searchLogic = (query: string) => {
-//   if (query) {
-//     const filtered = dummyData.filter((item) =>
-//       item.title.toLowerCase().includes(query.toLowerCase())
-//     );
+//       // Add any additional filtering logic if necessary (e.g., matching the date)
+//       return matchesQuery && matchesDistance && matchesAvailability;
+//     });
+
 //     return filtered;
-//   } else {
-//     return dummyData;
+//   } catch (error) {
+//     console.error("Error in searchLogic:", error);
+//     return []; // Return an empty array if there's an error
 //   }
 // };
 
 // export default searchLogic;
 
-
-
-// interface DataItem {
-//     id: number;
-//     title: string;
-//     distance: number;
-//     price: string;
-//     status: string;
-//     imageUrl: string;
-//     category: string;
-//     categoryType: string;
-//     bookingSlots: string;
-//     location: string;
-//     openTime: string;
-//     closeTime: string;
-//   }
-  
-//   const searchLogic = (
-//     data: DataItem[],
-//     keyword: string,
-//     distance: number,
-//     price: number,
-//     date: Date
-//   ): DataItem[] => {
-//     return data.filter(item => {
-//       const itemDistance = item.distance;
-//       const itemPrice = parseFloat(item.price.replace('$', ''));
-//       const keywordMatch = item.title.toLowerCase().includes(keyword.toLowerCase());
-      
-//       // Implement date-based filtering logic if needed in the future
-      
-//       return itemDistance <= distance && itemPrice <= price && keywordMatch;
-//     });
-//   };
-  
-//   export default searchLogic;
