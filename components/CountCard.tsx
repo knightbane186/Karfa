@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
 
 interface CountCardProps {
   title: string;
@@ -16,8 +16,12 @@ const CountCard: React.FC<CountCardProps> = ({ title, distance, status, price })
     'Available Later': '#FFC107',
   }[status];
 
+  const handleCardPress = () => {
+    router.push('/bookings');
+  };
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={handleCardPress}>
       {/* Image at the top */}
       <Image source={require('@/assets/images/basketball1.png')} style={styles.image} />
 
@@ -38,12 +42,63 @@ const CountCard: React.FC<CountCardProps> = ({ title, distance, status, price })
       </View>
 
       {/* Share Button */}
-      <TouchableOpacity style={styles.shareButton}>
+      <TouchableOpacity 
+        style={styles.shareButton}
+        onPress={(e) => {
+          e.stopPropagation(); // Prevent the card's onPress from firing
+          // Add your share functionality here
+        }}
+      >
         <Image source={require('@/assets/icons/plus.png')} style={styles.shareIcon} />
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
+// import React from 'react';
+// import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+
+// interface CountCardProps {
+//   title: string;
+//   distance: number;
+//   status: 'Available' | 'Booked' | 'Available Later';
+//   price: number;
+// }
+
+// const CountCard: React.FC<CountCardProps> = ({ title, distance, status, price }) => {
+//   const statusColor = {
+//     Available: '#4CAF50',
+//     Booked: '#FF5252',
+//     'Available Later': '#FFC107',
+//   }[status];
+
+//   return (
+//     <View style={styles.container}>
+//       {/* Image at the top */}
+//       <Image source={require('@/assets/images/basketball1.png')} style={styles.image} />
+
+//       {/* Content inside the card */}
+//       <View style={styles.contentContainer}>
+//         <Text style={styles.title}>{title}</Text>
+//         <Text style={styles.distance}>{distance.toFixed(1)} Km from you</Text>
+
+//         {/* Bottom row: status and price */}
+//         <View style={styles.bottomRow}>
+//           <View style={[styles.statusContainer, { backgroundColor: statusColor }]}>
+//             <Text style={styles.statusText}>{status}</Text>
+//           </View>
+//           <View style={styles.priceContainer}>
+//             <Text style={styles.price}>${price}</Text>
+//           </View>
+//         </View>
+//       </View>
+
+//       {/* Share Button */}
+//       <TouchableOpacity style={styles.shareButton}>
+//         <Image source={require('@/assets/icons/plus.png')} style={styles.shareIcon} />
+//       </TouchableOpacity>
+//     </View>
+//   );
+// };
 
 const styles = StyleSheet.create({
   container: {
