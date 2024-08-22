@@ -7,7 +7,7 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import { router } from 'expo-router';
 import CustomButton from '@/components/CustomButton';
 import { Link } from 'expo-router';
-
+import Registration from './screens/RegistrationScreen';
 interface GradientTextProps {
   text: string;
   style: any;
@@ -81,8 +81,8 @@ const App: React.FC = () => {
           </TouchableOpacity>
 
           <CustomButton
-            title="Continue with email"
-            handlePress={() => router.push('/sign-in')}
+            title="Register"
+            handlePress={() => router.push('/Register')}
             containerStyles="w-full bg-gray-800 rounded-md py-3 mb-4 flex-row justify-center items-center"
             textStyles="text-white text-center font-semibold"
           />
