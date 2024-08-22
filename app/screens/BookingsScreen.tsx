@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import CustomButton from '@/components/CustomButton';
@@ -8,10 +8,11 @@ import { BookingState, calculateTotalPrice, getConfirmButtonText, isBookingValid
 
 const BookingsScreen = () => {
   const [bookingState, setBookingState] = useState<BookingState>({
-    pricePerPerson: 10, // Set this based on the actual price from the venue data
+    pricePerPerson: 10,
     selectedPeople: 0,
     selectedSlots: [],
   });
+  const [modalVisible, setModalVisible] = useState(false);
 
   const availableSlots = ['7 am', '9 am', '11 am', '12 pm', '3 pm', '5 pm', '9 pm', '10 pm'];
 
@@ -33,6 +34,10 @@ const BookingsScreen = () => {
         : [...prev.selectedSlots, slot];
       return { ...prev, selectedSlots: newSlots };
     });
+  };
+
+  const handleConfirmBooking = () => {
+    setModalVisible(true);
   };
 
   return (
@@ -100,12 +105,47 @@ const BookingsScreen = () => {
       <View style={styles.footer}>
         <CustomButton
           title={getConfirmButtonText(bookingState)}
-          handlePress={() => {/* Implement booking confirmation logic */}}
+          handlePress={handleConfirmBooking}
           containerStyles={styles.confirmButton}
           textStyles={styles.confirmButtonText}
           disabled={!isBookingValid(bookingState)}
         />
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>Success!</Text>
+            <Text style={styles.modalText}>
+              Your booking to Ashford Courts is confirmed. You can find all of your active / previous bookings in your profile.
+            </Text>
+            <CustomButton
+              title="My Bookings"
+              handlePress={() => {
+                setModalVisible(false);
+                // Navigate to My Bookings screen
+                // router.push('/myBookings');
+              }}
+              containerStyles={styles.modalButton}
+              textStyles={styles.modalButtonText}
+            />
+            <CustomButton
+              title="Done"
+              handlePress={() => {
+                setModalVisible(false);
+                router.back();
+              }}
+              containerStyles={[styles.modalButton, styles.doneButton]}
+              textStyles={styles.modalButtonText}
+            />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -194,10 +234,11 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   confirmButtonText: {
-    color: 'red',
+    color: 'black',
     fontWeight: 'bold',
     textAlign: 'center',
-  },  peopleSelector: {
+  },
+  peopleSelector: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -210,6 +251,268 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  modalButton: {
+    backgroundColor: '#82EE16',
+    borderRadius: 8,
+    padding: 10,
+    elevation: 2,
+    marginTop: 10,
+    minWidth: 150,
+  },
+  modalButtonText: {
+    color: 'black',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  doneButton: {
+    backgroundColor: '#f0f0f0',
+  },
 });
 
-export default BookingsScreen;
+export default BookingsScreen;// import React, { useState } from 'react';
+// import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+// import { SafeAreaView } from 'react-native-safe-area-context';
+// import { Ionicons } from '@expo/vector-icons';
+// import CustomButton from '@/components/CustomButton';
+// import { router } from 'expo-router';
+// import { BookingState, calculateTotalPrice, getConfirmButtonText, isBookingValid } from '../search/bookingLogic';
+
+// const BookingsScreen = () => {
+//   const [bookingState, setBookingState] = useState<BookingState>({
+//     pricePerPerson: 10, // Set this based on the actual price from the venue data
+//     selectedPeople: 0,
+//     selectedSlots: [],
+//   });
+
+//   const availableSlots = ['7 am', '9 am', '11 am', '12 pm', '3 pm', '5 pm', '9 pm', '10 pm'];
+
+//   const handleGoBack = () => {
+//     router.back();
+//   };
+
+//   const handlePeopleChange = (change: number) => {
+//     setBookingState(prev => ({
+//       ...prev,
+//       selectedPeople: Math.max(0, prev.selectedPeople + change)
+//     }));
+//   };
+
+//   const handleSlotToggle = (slot: string) => {
+//     setBookingState(prev => {
+//       const newSlots = prev.selectedSlots.includes(slot)
+//         ? prev.selectedSlots.filter(s => s !== slot)
+//         : [...prev.selectedSlots, slot];
+//       return { ...prev, selectedSlots: newSlots };
+//     });
+//   };
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <View style={styles.header}>
+//         <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+//           <Ionicons name="arrow-back" size={24} color="white" />
+//         </TouchableOpacity>
+//         <View>
+//           <Text style={styles.title}>Ashford Courts</Text>
+//           <Text style={styles.subtitle}>0.3 Km from you</Text>
+//         </View>
+//       </View>
+
+//       <ScrollView>
+//         <View style={styles.infoContainer}>
+//           <View style={styles.infoItem}>
+//             <Ionicons name="cash-outline" size={24} color="#82EE16" />
+//             <Text style={styles.infoText}>${bookingState.pricePerPerson} per Person</Text>
+//           </View>
+//           <View style={styles.infoItem}>
+//             <Ionicons name="location-outline" size={24} color="#82EE16" />
+//             <Text style={styles.infoText}>Southbank, VIC</Text>
+//           </View>
+//         </View>
+
+//         <View style={styles.bookingSection}>
+//           <Text style={styles.sectionTitle}>Date</Text>
+//           <TouchableOpacity style={styles.input}>
+//             <Text style={styles.inputText}>14 / 08 / 2024</Text>
+//           </TouchableOpacity>
+
+//           <Text style={styles.sectionTitle}>People</Text>
+//           <View style={styles.peopleSelector}>
+//             <TouchableOpacity onPress={() => handlePeopleChange(-1)}>
+//               <Ionicons name="remove-circle-outline" size={24} color="#82EE16" />
+//             </TouchableOpacity>
+//             <Text style={styles.peopleCount}>{bookingState.selectedPeople}</Text>
+//             <TouchableOpacity onPress={() => handlePeopleChange(1)}>
+//               <Ionicons name="add-circle-outline" size={24} color="#82EE16" />
+//             </TouchableOpacity>
+//           </View>
+
+//           <Text style={styles.sectionTitle}>Available Slots</Text>
+//           <View style={styles.slotsContainer}>
+//             {availableSlots.map((slot) => (
+//               <TouchableOpacity
+//                 key={slot}
+//                 style={[
+//                   styles.slotButton,
+//                   bookingState.selectedSlots.includes(slot) && styles.selectedSlot,
+//                 ]}
+//                 onPress={() => handleSlotToggle(slot)}
+//               >
+//                 <Text style={[
+//                   styles.slotText,
+//                   bookingState.selectedSlots.includes(slot) && styles.selectedSlotText,
+//                 ]}>{slot}</Text>
+//               </TouchableOpacity>
+//             ))}
+//           </View>
+//         </View>
+//       </ScrollView>
+
+//       <View style={styles.footer}>
+//         <CustomButton
+//           title={getConfirmButtonText(bookingState)}
+//           handlePress={() => {/* Implement booking confirmation logic */}}
+//           containerStyles={styles.confirmButton}
+//           textStyles={styles.confirmButtonText}
+//           disabled={!isBookingValid(bookingState)}
+//         />
+//       </View>
+//     </SafeAreaView>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: 'grey',
+//   },
+//   header: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     padding: 20,
+//   },
+//   backButton: {
+//     marginRight: 15,
+//   },
+//   title: {
+//     fontSize: 24,
+//     fontWeight: 'bold',
+//     color: 'white',
+//   },
+//   subtitle: {
+//     fontSize: 16,
+//     color: 'gray',
+//   },
+//   infoContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     padding: 20,
+//   },
+//   infoItem: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//   },
+//   infoText: {
+//     color: 'white',
+//     marginLeft: 10,
+//   },
+//   bookingSection: {
+//     padding: 20,
+//   },
+//   sectionTitle: {
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//     color: 'white',
+//     marginBottom: 10,
+//   },
+//   input: {
+//     backgroundColor: '#1E1E1E',
+//     padding: 15,
+//     borderRadius: 8,
+//     marginBottom: 20,
+//   },
+//   inputText: {
+//     color: 'white',
+//   },
+//   slotsContainer: {
+//     flexDirection: 'row',
+//     flexWrap: 'wrap',
+//     justifyContent: 'space-between',
+//   },
+//   slotButton: {
+//     backgroundColor: '#1E1E1E',
+//     padding: 10,
+//     borderRadius: 8,
+//     width: '23%',
+//     alignItems: 'center',
+//     marginBottom: 10,
+//   },
+//   selectedSlot: {
+//     backgroundColor: '#82EE16',
+//   },
+//   slotText: {
+//     color: 'white',
+//   },
+//   selectedSlotText: {
+//     color: 'black',
+//   },
+//   footer: {
+//     padding: 20,
+//   },
+//   confirmButton: {
+//     backgroundColor: '#82EE16',
+//     borderRadius: 8,
+//     padding: 15,
+//   },
+//   confirmButtonText: {
+//     color: 'red',
+//     fontWeight: 'bold',
+//     textAlign: 'center',
+//   },  peopleSelector: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'space-between',
+//     backgroundColor: '#1E1E1E',
+//     padding: 15,
+//     borderRadius: 8,
+//     marginBottom: 20,
+//   },
+//   peopleCount: {
+//     color: 'white',
+//     fontSize: 18,
+//   },
+// });
+
+// export default BookingsScreen;
