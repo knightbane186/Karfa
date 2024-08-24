@@ -15,6 +15,8 @@ const RegistrationScreen = () => {
   );
 };
 
+// adding basics 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
