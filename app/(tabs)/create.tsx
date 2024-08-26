@@ -1,24 +1,425 @@
-
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import Map from '@/components/Map'; // Adjust the path if necessary
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, FlatList, SafeAreaView, View } from 'react-native';
+import CountCard from '@/components/CountCard';
+import dummyData from '../data/dummyData';
+import searchLogic from '../search/SearchLogic';
 
 const CreatePage = () => {
-  return (
-    <View style={styles.container}>
-      {/* Full-screen Map */}
-      <Map style={styles.container} />
+  const [allData, setAllData] = useState(dummyData);
+  const [searchResults, setSearchResults] = useState([]);
+  const [isParamCardOpen, setIsParamCardOpen] = useState(false);
+  const flatListRef = useRef(null);
+
+  const [searchParams, setSearchParams] = useState({
+    query: '',
+    maxPrice: 0,
+    selectedDate: new Date(),
+    availability: '',
+    selectedTime: 0,
+  });
+
+  useEffect(() => {
+    const results = searchLogic(
+      searchParams.query,
+      searchParams.maxPrice,
+      searchParams.selectedDate,
+      searchParams.availability,
+      searchParams.selectedTime
+    );
+    setSearchResults(results);
+
+    const newData = [
+      ...results,
+      ...dummyData.filter(item => !results.some(searchItem => searchItem.id === item.id)),
+    ];
+    setAllData(newData);
+
+    if (results.length > 0 && flatListRef.current) {
+      flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+    }
+  }, [searchParams]);
+
+  const toggleParamCard = () => {
+    setIsParamCardOpen(prev => !prev);
+  };
+
+  const renderItem = ({ item, index }) => (
+    <View style={index < searchResults.length ? styles.searchResult : {}}>
+      <CountCard
+        title={item.title}
+        distance={item.distance}
+        status={item.status}
+        price={item.price}
+      />
     </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={isParamCardOpen ? styles.paramCardOpen : styles.paramCardClosed}>
+        {/* Parameter card content goes here */}
+      </View>
+
+      <FlatList
+        ref={flatListRef}
+        data={allData}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={[
+          styles.listContent,
+          isParamCardOpen && { paddingTop: 120 }, // Adjust for open parameter card
+        ]}
+      />
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'transparent',
+  },
+  paramCardOpen: {
+    height: 200, // Adjust based on your parameter card height
+    backgroundColor: '#f0f0f0',
+    marginBottom: 20,
+  },
+  paramCardClosed: {
+    height: 0,
+    overflow: 'hidden',
+  },
+  listContent: {
+    paddingTop: 60, // Default padding for search bar height
+    paddingBottom: 80, // Adjust for bottom navigation
+    paddingHorizontal: 10,
+  },
+  searchResult: {
+    backgroundColor: 'rgba(255, 255, 255, 0.05)', // Subtle highlight for search results
   },
 });
 
 export default CreatePage;
+
+
+
+// import React, { useState, useEffect, useRef } from 'react';
+// import { StyleSheet, FlatList, SafeAreaView, View } from 'react-native';
+// import CountCard from '@/components/CountCard';
+// import dummyData from '../data/dummyData';
+// import searchLogic from '../search/SearchLogic';
+
+// const CreatePage = () => {
+//   const [allData, setAllData] = useState(dummyData);
+//   const [searchResults, setSearchResults] = useState([]);
+//   const flatListRef = useRef(null);
+
+//   const [searchParams, setSearchParams] = useState({
+//     query: '',
+//     maxPrice: 0,
+//     selectedDate: new Date(),
+//     availability: '',
+//     selectedTime: 0
+//   });
+
+//   useEffect(() => {
+//     const results = searchLogic(
+//       searchParams.query,
+//       searchParams.maxPrice,
+//       searchParams.selectedDate,
+//       searchParams.availability,
+//       searchParams.selectedTime
+//     );
+//     setSearchResults(results);
+
+//     // Combine search results with dummy data
+//     const newData = [...results, ...dummyData.filter(item => 
+//       !results.some(searchItem => searchItem.id === item.id)
+//     )];
+//     setAllData(newData);
+
+//     // Scroll to top when new results are added
+//     if (results.length > 0 && flatListRef.current) {
+//       flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+//     }
+//   }, [searchParams]);
+
+//   const renderItem = ({ item, index }) => (
+//     <View style={index < searchResults.length ? styles.searchResult : {}}>
+//       <CountCard
+//         title={item.title}
+//         distance={item.distance}
+//         status={item.status}
+//         price={item.price}
+//       />
+//     </View>
+//   );
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <FlatList
+//         ref={flatListRef}
+//         data={allData}
+//         renderItem={renderItem}
+//         keyExtractor={(item) => item.id.toString()}
+//         contentContainerStyle={styles.listContent}
+//       />
+//     </SafeAreaView>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: 'transparent',
+//   },
+//   listContent: {
+//     paddingTop: 60, // Adjust based on your search bar height
+//     paddingBottom: 80, // Adjust for bottom navigation
+//     paddingHorizontal: 10,
+//   },
+//   searchResult: {
+//     backgroundColor: 'rgba(255, 255, 255, 0.05)', // Subtle highlight for search results
+//   },
+// });
+
+// export default CreatePage;
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import { StyleSheet, FlatList, SafeAreaView } from 'react-native';
+// import CountCard from '@/components/CountCard';
+// import dummyData from '../data/dummyData';
+// import searchLogic from '../search/SearchLogic';
+
+// const CreatePage = () => {
+//   const [allData, setAllData] = useState([]);
+//   const [searchParams, setSearchParams] = useState({
+//     query: '',
+//     maxPrice: 0,
+//     selectedDate: new Date(),
+//     availability: '',
+//     selectedTime: 0
+//   });
+
+//   useEffect(() => {
+//     const searchResults = searchLogic(
+//       searchParams.query,
+//       searchParams.maxPrice,
+//       searchParams.selectedDate,
+//       searchParams.availability,
+//       searchParams.selectedTime
+//     );
+    
+//     // Combine search results with dummy data, ensuring no duplicates
+//     const combinedData = [
+//       ...searchResults,
+//       ...dummyData.filter(item => !searchResults.some(searchItem => searchItem.id === item.id))
+//     ];
+    
+//     setAllData(combinedData);
+//   }, [searchParams]);
+
+//   const renderItem = ({ item }) => (
+//     <CountCard
+//       title={item.title}
+//       distance={item.distance}
+//       status={item.status}
+//       price={item.price}
+//     />
+//   );
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <FlatList
+//         data={allData}
+//         renderItem={renderItem}
+//         keyExtractor={(item) => item.id.toString()}
+//         contentContainerStyle={styles.listContent}
+//       />
+//     </SafeAreaView>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: 'transparent',
+//   },
+//   listContent: {
+//     paddingTop: 60, // Adjust based on your search bar height
+//     paddingBottom: 80, // Adjust for bottom navigation
+//     paddingHorizontal: 10,
+//   },
+// });
+
+// export default CreatePage;
+
+// import React, { useState, useEffect } from 'react';
+// import { View, StyleSheet, SectionList, Text } from 'react-native';
+// import Map from '@/components/Map';
+// import CountCard from '@/components/CountCard';
+// import dummyData from '../data/dummyData';
+// import searchLogic from '../search/SearchLogic';
+
+// const CreatePage = () => {
+//   const [filteredData, setFilteredData] = useState([]);
+
+//   // These should be passed from the search parameters or stored in a context
+//   const [searchParams, setSearchParams] = useState({
+//     query: '',
+//     maxPrice: 0,
+//     selectedDate: new Date(),
+//     availability: '',
+//     selectedTime: 0
+//   });
+
+//   useEffect(() => {
+//     // Run the search logic when search parameters change
+//     const results = searchLogic(
+//       searchParams.query,
+//       searchParams.maxPrice,
+//       searchParams.selectedDate,
+//       searchParams.availability,
+//       searchParams.selectedTime
+//     );
+//     setFilteredData(results);
+//   }, [searchParams]);
+
+//   const sections = [
+//     { title: 'Search Results', data: filteredData },
+//     { title: 'All Venues', data: dummyData },
+//   ];
+
+//   return (
+//     <View style={styles.container}>
+//       <Map style={styles.mapContainer} />
+//       <SectionList
+//         sections={sections}
+//         keyExtractor={(item) => item.id.toString()}
+//         renderItem={({ item }) => (
+//           <CountCard
+//             title={item.title}
+//             distance={item.distance}
+//             status={item.status}
+//             price={item.price}
+//           />
+//         )}
+//         renderSectionHeader={({ section: { title } }) => (
+//           <Text style={styles.sectionHeader}>{title}</Text>
+//         )}
+//         style={styles.cardList}
+//         contentContainerStyle={styles.cardListContent}
+//       />
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+//   mapContainer: {
+//     ...StyleSheet.absoluteFillObject,
+//   },
+//   cardList: {
+//     position: 'absolute',
+//     bottom: 0,
+//     left: 0,
+//     right: 0,
+//     maxHeight: '70%',
+//   },
+//   cardListContent: {
+//     padding: 10,
+//   },
+//   sectionHeader: {
+//     fontWeight: 'bold',
+//     fontSize: 16,
+//     backgroundColor: 'rgba(247,247,247,0.8)',
+//     padding: 10,
+//   },
+// });
+
+// export default CreatePage;
+
+
+
+
+
+// import React from 'react';
+// import { View, StyleSheet, FlatList } from 'react-native';
+// import Map from '@/components/Map';
+// import CountCard from '@/components/CountCard';
+// import dummyData from '../data/dummyData';
+
+// const CreatePage = () => {
+//   return (
+//     <View style={styles.container}>
+//       {/* Full-screen Map */}
+//       <Map style={styles.mapContainer} />
+
+//       {/* Scrollable list of CountCards */}
+//       <FlatList
+//         data={dummyData}
+//         keyExtractor={(item) => item.id.toString()}
+//         renderItem={({ item }) => (
+//           <CountCard
+//             title={item.title}
+//             distance={item.distance}
+//             status={item.status}
+//             price={item.price}
+//           />
+//         )}
+//         style={styles.cardList}
+//         contentContainerStyle={styles.cardListContent}
+//       />
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+//   mapContainer: {
+//     ...StyleSheet.absoluteFillObject,
+//   },
+//   cardList: {
+//     position: 'absolute',
+//     bottom: 0,
+//     left: 0,
+//     right: 0,
+//     maxHeight: '50%', // Adjust this value to control how much of the screen the cards occupy
+//   },
+//   cardListContent: {
+//     padding: 10,
+//   },
+// });
+
+// export default CreatePage;
+
+
+
+// import React from 'react';
+// import { View, StyleSheet } from 'react-native';
+// import Map from '@/components/Map'; // Adjust the path if necessary
+
+// const CreatePage = () => {
+//   return (
+//     <View style={styles.container}>
+//       {/* Full-screen Map */}
+//       <Map style={styles.container} />
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+// });
+
+// export default CreatePage;
 
 
 
