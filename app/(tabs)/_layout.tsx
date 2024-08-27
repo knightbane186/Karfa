@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     flexDirection: 'row',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: 'gray',
     borderRadius: 15,
     padding: 10,
     flex: 1,

@@ -4,6 +4,7 @@ export interface BookingState {
     pricePerPerson: number;
     selectedPeople: number;
     selectedSlots: string[];
+    selectedDate: Date;
   }
   
   export const calculateTotalPrice = (state: BookingState): number => {

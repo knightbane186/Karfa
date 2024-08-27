@@ -1,31 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, FlatList, SafeAreaView, View } from 'react-native';
+import { StyleSheet, FlatList, View, Animated, Dimensions } from 'react-native';
 import CountCard from '@/components/CountCard';
 import dummyData from '../data/dummyData';
 import searchLogic from '../search/SearchLogic';
+import ParameterCard from '@/components/ParameterCard';
 
-const CreatePage = () => {
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+const PARAM_CARD_HEIGHT = 300; // Adjust this value as needed
+
+const CreatePage = ({ showParameters, setShowParameters, searchQuery, onSearch }) => {
   const [allData, setAllData] = useState(dummyData);
   const [searchResults, setSearchResults] = useState([]);
-  const [isParamCardOpen, setIsParamCardOpen] = useState(false);
   const flatListRef = useRef(null);
-
-  const [searchParams, setSearchParams] = useState({
-    query: '',
-    maxPrice: 0,
-    selectedDate: new Date(),
-    availability: '',
-    selectedTime: 0,
-  });
+  const animatedTranslateY = useRef(new Animated.Value(-PARAM_CARD_HEIGHT)).current;
 
   useEffect(() => {
-    const results = searchLogic(
-      searchParams.query,
-      searchParams.maxPrice,
-      searchParams.selectedDate,
-      searchParams.availability,
-      searchParams.selectedTime
-    );
+    Animated.spring(animatedTranslateY, {
+      toValue: showParameters ? 0 : -PARAM_CARD_HEIGHT,
+      useNativeDriver: true,
+      bounciness: 0,
+    }).start();
+  }, [showParameters]);
+
+  const handleSearch = (maxPrice, selectedDate, availability, selectedTime) => {
+    const results = searchLogic(searchQuery, maxPrice, selectedDate, availability, selectedTime);
     setSearchResults(results);
 
     const newData = [
@@ -37,40 +36,46 @@ const CreatePage = () => {
     if (results.length > 0 && flatListRef.current) {
       flatListRef.current.scrollToOffset({ offset: 0, animated: true });
     }
-  }, [searchParams]);
 
-  const toggleParamCard = () => {
-    setIsParamCardOpen(prev => !prev);
+    onSearch(searchQuery, maxPrice, selectedDate, availability, selectedTime);
+    setShowParameters(false);
   };
 
   const renderItem = ({ item, index }) => (
-    <View style={index < searchResults.length ? styles.searchResult : {}}>
-      <CountCard
-        title={item.title}
-        distance={item.distance}
-        status={item.status}
-        price={item.price}
-      />
-    </View>
+    <CountCard
+      title={item.title}
+      distance={item.distance}
+      status={item.status}
+      price={item.price}
+    />
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={isParamCardOpen ? styles.paramCardOpen : styles.paramCardClosed}>
-        {/* Parameter card content goes here */}
-      </View>
+    <View style={styles.container}>
+      <Animated.View style={[
+        styles.paramCardContainer,
+        { transform: [{ translateY: animatedTranslateY }] }
+      ]}>
+        <ParameterCard 
+          onSearch={handleSearch} 
+          onClose={() => setShowParameters(false)} 
+          searchQuery={searchQuery}
+        />
+      </Animated.View>
 
-      <FlatList
-        ref={flatListRef}
-        data={allData}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={[
-          styles.listContent,
-          isParamCardOpen && { paddingTop: 120 }, // Adjust for open parameter card
-        ]}
-      />
-    </SafeAreaView>
+      <Animated.View style={[
+        styles.listContainer,
+        { transform: [{ translateY: Animated.add(animatedTranslateY, PARAM_CARD_HEIGHT) }] }
+      ]}>
+        <FlatList
+          ref={flatListRef}
+          data={allData}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.listContent}
+        />
+      </Animated.View>
+    </View>
   );
 };
 
@@ -79,26 +84,132 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
   },
-  paramCardOpen: {
-    height: 200, // Adjust based on your parameter card height
-    backgroundColor: '#f0f0f0',
-    marginBottom: 20,
+  paramCardContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: PARAM_CARD_HEIGHT,
+    zIndex: 1,
   },
-  paramCardClosed: {
-    height: 0,
-    overflow: 'hidden',
+  listContainer: {
+    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   listContent: {
-    paddingTop: 60, // Default padding for search bar height
+    paddingTop: 10,
     paddingBottom: 80, // Adjust for bottom navigation
     paddingHorizontal: 10,
-  },
-  searchResult: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)', // Subtle highlight for search results
   },
 });
 
 export default CreatePage;
+
+// import React, { useState, useEffect, useRef } from 'react';
+// import { StyleSheet, FlatList, SafeAreaView, View } from 'react-native';
+// import CountCard from '@/components/CountCard';
+// import dummyData from '../data/dummyData';
+// import searchLogic from '../search/SearchLogic';
+
+// const CreatePage = () => {
+//   const [allData, setAllData] = useState(dummyData);
+//   const [searchResults, setSearchResults] = useState([]);
+//   const [isParamCardOpen, setIsParamCardOpen] = useState(false);
+//   const flatListRef = useRef(null);
+
+//   const [searchParams, setSearchParams] = useState({
+//     query: '',
+//     maxPrice: 0,
+//     selectedDate: new Date(),
+//     availability: '',
+//     selectedTime: 0,
+//   });
+
+//   useEffect(() => {
+//     const results = searchLogic(
+//       searchParams.query,
+//       searchParams.maxPrice,
+//       searchParams.selectedDate,
+//       searchParams.availability,
+//       searchParams.selectedTime
+//     );
+//     setSearchResults(results);
+
+//     const newData = [
+//       ...results,
+//       ...dummyData.filter(item => !results.some(searchItem => searchItem.id === item.id)),
+//     ];
+//     setAllData(newData);
+
+//     if (results.length > 0 && flatListRef.current) {
+//       flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+//     }
+//   }, [searchParams]);
+
+//   const toggleParamCard = () => {
+//     setIsParamCardOpen(prev => !prev);
+//   };
+
+//   const renderItem = ({ item, index }) => (
+//     <View style={index < searchResults.length ? styles.searchResult : {}}>
+//       <CountCard
+//         title={item.title}
+//         distance={item.distance}
+//         status={item.status}
+//         price={item.price}
+//       />
+//     </View>
+//   );
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <View style={isParamCardOpen ? styles.paramCardOpen : styles.paramCardClosed}>
+//         {/* Parameter card content goes here */}
+//       </View>
+
+//       <FlatList
+//         ref={flatListRef}
+//         data={allData}
+//         renderItem={renderItem}
+//         keyExtractor={(item) => item.id.toString()}
+//         contentContainerStyle={[
+//           styles.listContent,
+//           isParamCardOpen && { paddingTop: 300 }, // Adjust for open parameter card
+//         ]}
+//       />
+//     </SafeAreaView>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: 'transparent',
+//   },
+//   paramCardOpen: {
+//     height: 200, // Adjust based on your parameter card height
+//     backgroundColor: '#f0f0f0',
+//     marginBottom: 20,
+//   },
+//   paramCardClosed: {
+//     height: 0,
+//     overflow: 'hidden',
+//   },
+//   listContent: {
+//     paddingTop: 60, // Default padding for search bar height
+//     paddingBottom: 80, // Adjust for bottom navigation
+//     paddingHorizontal: 10,
+//   },
+//   searchResult: {
+//     backgroundColor: 'rgba(255, 255, 255, 0.05)', // Subtle highlight for search results
+//   },
+// });
+
+// export default CreatePage;
 
 
 
