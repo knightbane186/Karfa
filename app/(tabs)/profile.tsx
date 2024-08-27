@@ -1,8 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+// import { useNavigation } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native';
+import Bookmarks from '../screens/BookMarks';
 
 const Profile = () => {
+  const router = useRouter();
+
   return (
     <ScrollView style={styles.container}>
       {/* Header with icons */}
@@ -10,7 +16,9 @@ const Profile = () => {
         <Ionicons name="settings-outline" size={24} color="black" />
         <View style={styles.headerButtons}>
           <Ionicons name="create-outline" size={24} color="black" />
-          <Ionicons name="bookmark-outline" size={24} color="green" style={styles.bookmarkIcon} />
+          <TouchableOpacity onPress={() => router.push('/screens/BookMarks')}>
+    <Ionicons name="bookmark-outline" size={24} color="green" style={styles.bookmarkIcon} />
+  </TouchableOpacity>
         </View>
       </View>
 

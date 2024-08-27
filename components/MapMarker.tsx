@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import { MarkerView } from '@rnmapbox/maps';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Or your preferred icon set
 
 interface MapMarkerProps {
   id: string;
@@ -61,6 +62,9 @@ const MapMarker: React.FC<MapMarkerProps> = ({
                   <Text style={styles.status}>{status}</Text>
                   <Text style={styles.price}>${price}</Text>
                 </View>
+              </View>
+              <View style={styles.bookmarkContainer}>
+                <Icon name="bookmark" size={24} color="#4CAF50" />
               </View>
             </TouchableOpacity>
             <View style={styles.triangle} />
@@ -144,6 +148,22 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: -15,
     alignSelf: 'center',
+  },
+  bookmarkContainer: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: 'white',
+    borderRadius: 15,
+    padding: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
 
