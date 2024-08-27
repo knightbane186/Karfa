@@ -4,12 +4,13 @@ import Mapbox, { Camera, MapView, LocationPuck } from '@rnmapbox/maps';
 import { useRouter } from 'expo-router';
 import dummyData from '../app/data/dummyData'; // Adjust if needed
 import MapMarker from './MapMarker';
-
+import { useState } from 'react';
 const accessToken = 'pk.eyJ1IjoiZGVudmVyMCIsImEiOiJjbHpxeXU1aHMwMTk2MmxvbjRqbzRmeWpyIn0.NZ-Xjxx7L5ARWfPkDm0a6A';
 Mapbox.setAccessToken(accessToken);
 
 export default function Map() {
   const router = useRouter();
+  const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
 
   const handleNavigateToBooking = (id: string) => {
     console.log(`Navigating to BookingsScreen for id: ${id}`);
@@ -21,6 +22,15 @@ export default function Map() {
     }
   };
 
+  const handleMarkerSelect = (id: string) => {
+    setSelectedMarkerId(prevId => prevId === id ? null : id);
+  };
+
+  const handleMapPress = () => {
+    // When the map is pressed, close any open marker
+    setSelectedMarkerId(null);
+  };
+
   return (
     <View style={styles.container}>
       <MapView
@@ -30,6 +40,7 @@ export default function Map() {
         scrollEnabled={true}
         pitchEnabled={true}
         rotateEnabled={true}
+        onPress={handleMapPress}
       >
         <Camera followUserLocation />
         <LocationPuck
@@ -41,11 +52,9 @@ export default function Map() {
         {dummyData.map((item) => (
           <MapMarker
             key={item.id}
-            id={item.id}
-            title={item.title}
-            location={item.location}
-            price={item.price}
-            status={item.status}
+            {...item}
+            isSelected={selectedMarkerId === item.id}
+            onSelect={handleMarkerSelect}
             onNavigateToBooking={handleNavigateToBooking}
           />
         ))}
