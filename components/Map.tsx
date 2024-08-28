@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Mapbox, { Camera, MapView, LocationPuck } from '@rnmapbox/maps';
 import { useRouter } from 'expo-router';
-import dummyData from '../app/data/dummyData'; // Adjust if needed
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import dummyData from '../app/data/dummyData';
 import MapMarker from './MapMarker';
 
 const accessToken = 'pk.eyJ1IjoiZGVudmVyMCIsImEiOiJjbHpxeXU1aHMwMTk2MmxvbjRqbzRmeWpyIn0.NZ-Xjxx7L5ARWfPkDm0a6A';
@@ -10,15 +11,51 @@ Mapbox.setAccessToken(accessToken);
 
 export default function Map() {
   const router = useRouter();
+  const [bookmarks, setBookmarks] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    loadBookmarks();
+  }, []);
+
+  const loadBookmarks = async () => {
+    try {
+      const storedBookmarks = await AsyncStorage.getItem('businessBookmarks');
+      if (storedBookmarks) {
+        setBookmarks(new Set(JSON.parse(storedBookmarks)));
+      }
+    } catch (error) {
+      console.error('Error loading bookmarks:', error);
+    }
+  };
+
+  const saveBookmarks = async (updatedBookmarks: Set<number>) => {
+    try {
+      await AsyncStorage.setItem('businessBookmarks', JSON.stringify(Array.from(updatedBookmarks)));
+    } catch (error) {
+      console.error('Error saving bookmarks:', error);
+    }
+  };
 
   const handleNavigateToBooking = (id: string) => {
     console.log(`Navigating to BookingsScreen for id: ${id}`);
     try {
-      // Navigate to BookingsScreen.tsx in the screens folder
       router.push(`/screens/BookingsScreen?id=${id}`);
     } catch (error) {
       console.error('Navigation error:', error);
     }
+  };
+
+  const handleBookmark = (id: number, isBookmarked: boolean) => {
+    setBookmarks(prev => {
+      const newBookmarks = new Set(prev);
+      if (isBookmarked) {
+        newBookmarks.add(id);
+      } else {
+        newBookmarks.delete(id);
+      }
+      saveBookmarks(newBookmarks);
+      return newBookmarks;
+    });
   };
 
   return (
@@ -47,12 +84,10 @@ export default function Map() {
             price={item.price}
             status={item.status}
             onNavigateToBooking={handleNavigateToBooking}
-            imageUrl={item.imageUrl} // Assuming this exists in your data
-            distance={item.distance} // Assuming this exists in your data
-            isSelected={false} // You might want to manage this state
-            onSelect={() => {}} // You might want to implement this function
-            onBookmark={() => {}} // You might want to implement this function
-            isBookmarked={false} // You might want to manage this state
+            onBookmark={handleBookmark}
+            isBookmarked={bookmarks.has(item.id)}
+            imageUrl={item.imageUrl}
+            distance={item.distance}
           />
         ))}
       </MapView>
@@ -68,7 +103,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
 
 // import React from 'react';
 // import { StyleSheet, View } from 'react-native';

@@ -8,20 +8,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import dummyData from '../data/dummyData';
 
 interface BusinessData {
-  id: number;  // Changed from string to number
-  title: string;  // Changed from name to title
-  imageUrl: string;  // Changed from image_url to imageUrl
-  price: number;  // Changed from string to number
-  distance?: number;  // Make distance optional
-  status: string;  // Added this field
-  category: string;  // Added this field
-  categoryType: string;  // Added this field
-  bookingSlots: string;  // Added this field
+  id: number;
+  title: string;
+  imageUrl: string;
+  price: number;
+  distance?: number;
+  status: string;
+  category: string;
+  categoryType: string;
+  bookingSlots: string;
   location: string;
-  openTime: number;  // Changed from string to number
-  closeTime: number;  // Changed from string to number
-  rating?: number;  // Made optional
-  review_count?: number;  // Made optional
+  openTime: number;
+  closeTime: number;
+  rating?: number;
+  review_count?: number;
 }
 
 const BookMarks: React.FC = () => {
@@ -34,45 +34,29 @@ const BookMarks: React.FC = () => {
 
   const loadBookmarks = async () => {
     try {
-      const storedBookmarks = await AsyncStorage.getItem('businessBookmarks');
-      if (storedBookmarks) {
-        const parsedBookmarks = JSON.parse(storedBookmarks);
-        if (Array.isArray(parsedBookmarks) && parsedBookmarks.length > 0) {
-          // Ensure all required fields are present
-          const validBookmarks = parsedBookmarks.filter(bookmark => 
-            bookmark.id !== undefined &&
-            bookmark.title !== undefined &&
-            bookmark.imageUrl !== undefined &&
-            bookmark.price !== undefined
-          );
-          setBookmarks(validBookmarks);
-        } else {
-          // If stored bookmarks are empty or invalid, use first 5 items from dummyData
-          setBookmarks(dummyData.slice(0, 5));
-        }
-      } else {
-        // If no stored bookmarks, use first 5 items from dummyData
-        setBookmarks(dummyData.slice(0, 5));
+      const storedBookmarkIds = await AsyncStorage.getItem('businessBookmarks');
+      if (storedBookmarkIds) {
+        const bookmarkIds = new Set(JSON.parse(storedBookmarkIds));
+        const bookmarkedItems = dummyData.filter(item => bookmarkIds.has(item.id));
+        setBookmarks(bookmarkedItems);
       }
     } catch (error) {
       console.error('Error loading bookmarks:', error);
-      // In case of error, still set some data from dummyData
-      setBookmarks(dummyData.slice(0, 5));
     }
   };
 
-  const saveBookmarks = async (updatedBookmarks: BusinessData[]) => {
+  const handleDeleteBookmark = async (id: number) => {
     try {
-      await AsyncStorage.setItem('businessBookmarks', JSON.stringify(updatedBookmarks));
+      const storedBookmarkIds = await AsyncStorage.getItem('businessBookmarks');
+      if (storedBookmarkIds) {
+        const bookmarkIds = new Set(JSON.parse(storedBookmarkIds));
+        bookmarkIds.delete(id);
+        await AsyncStorage.setItem('businessBookmarks', JSON.stringify(Array.from(bookmarkIds)));
+        loadBookmarks(); // Reload bookmarks after deletion
+      }
     } catch (error) {
-      console.error('Error saving bookmarks:', error);
+      console.error('Error deleting bookmark:', error);
     }
-  };
-
-  const handleDeleteBookmark = (id: number) => {
-    const updatedBookmarks = bookmarks.filter(bookmark => bookmark.id !== id);
-    setBookmarks(updatedBookmarks);
-    saveBookmarks(updatedBookmarks);
   };
 
   const renderSwipeableCountCard = ({ item }: { item: BusinessData }) => {
@@ -82,7 +66,9 @@ const BookMarks: React.FC = () => {
       </View>
     );
 
-    const distanceText = item.distance !== undefined ? `${item.distance.toFixed(2)} km` : 'N/A';
+    const distanceText = item.distance !== undefined && item.distance !== null
+      ? `${item.distance.toFixed(2)} km`
+      : 'Distance N/A';
 
     return (
       <Swipeable
@@ -104,7 +90,6 @@ const BookMarks: React.FC = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        {/* Header with icons */}
         <View style={styles.headerIcons}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color="black" />
