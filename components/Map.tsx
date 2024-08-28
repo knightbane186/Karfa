@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
-import Mapbox, { Camera, MapView, LocationPuck } from '@rnmapbox/maps';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import Mapbox, { Camera, MapView, LocationPuck, UserLocation } from '@rnmapbox/maps';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import dummyData from '../app/data/dummyData';
 import MapMarker from './MapMarker';
+import { Ionicons } from '@expo/vector-icons';
 
 const accessToken = 'pk.eyJ1IjoiZGVudmVyMCIsImEiOiJjbHpxeXU1aHMwMTk2MmxvbjRqbzRmeWpyIn0.NZ-Xjxx7L5ARWfPkDm0a6A';
 Mapbox.setAccessToken(accessToken);
@@ -12,6 +13,8 @@ Mapbox.setAccessToken(accessToken);
 export default function Map() {
   const router = useRouter();
   const [bookmarks, setBookmarks] = useState<Set<number>>(new Set());
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const cameraRef = useRef<Camera>(null);
 
   useEffect(() => {
     loadBookmarks();
@@ -58,6 +61,20 @@ export default function Map() {
     });
   };
 
+  const handleUserLocationUpdate = (location: Mapbox.Location) => {
+    setUserLocation([location.coords.longitude, location.coords.latitude]);
+  };
+
+  const handleReturnToLocation = () => {
+    if (userLocation && cameraRef.current) {
+      cameraRef.current.setCamera({
+        centerCoordinate: userLocation,
+        zoomLevel: 14,
+        animationDuration: 500,
+      });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <MapView
@@ -68,7 +85,16 @@ export default function Map() {
         pitchEnabled={true}
         rotateEnabled={true}
       >
-        <Camera followUserLocation />
+        <Camera
+          ref={cameraRef}
+          zoomLevel={12}
+          centerCoordinate={userLocation || [0, 0]}
+          animationDuration={0}
+        />
+        <UserLocation
+          onUpdate={handleUserLocationUpdate}
+          minDisplacement={10}
+        />
         <LocationPuck
           puckBearingEnabled
           puckBearing="heading"
@@ -91,6 +117,9 @@ export default function Map() {
           />
         ))}
       </MapView>
+      <TouchableOpacity style={styles.locationButton} onPress={handleReturnToLocation}>
+        <Ionicons name="locate" size={24} color="black" />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -102,29 +131,94 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
+  locationButton: {
+    position: 'absolute',
+    bottom: 16,
+    right: 16,
+    backgroundColor: 'white',
+    borderRadius: 30,
+    padding: 10,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
 });
-
-// import React from 'react';
-// import { StyleSheet, View } from 'react-native';
-// import Mapbox, { Camera, MapView, LocationPuck } from '@rnmapbox/maps';
+// import React, { useState, useEffect, useRef } from 'react';
+// import { StyleSheet, View, TouchableOpacity } from 'react-native';
+// import Mapbox, { Camera, MapView, LocationPuck, UserLocation } from '@rnmapbox/maps';
 // import { useRouter } from 'expo-router';
-// import dummyData from '../app/data/dummyData'; // Adjust the path according to your project structure
-// import MapMarker from './MapMarker'; // Adjust the path as needed
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { Ionicons } from '@expo/vector-icons';
+// import dummyData from '../app/data/dummyData';
+// import MapMarker from './MapMarker';
 
 // const accessToken = 'pk.eyJ1IjoiZGVudmVyMCIsImEiOiJjbHpxeXU1aHMwMTk2MmxvbjRqbzRmeWpyIn0.NZ-Xjxx7L5ARWfPkDm0a6A';
 // Mapbox.setAccessToken(accessToken);
 
 // export default function Map() {
 //   const router = useRouter();
+//   const [bookmarks, setBookmarks] = useState<Set<number>>(new Set());
+//   const [userLocation, setUserLocation] = useState(null);
+//   const cameraRef = useRef(null);
+
+//   useEffect(() => {
+//     loadBookmarks();
+//   }, []);
+
+//   const loadBookmarks = async () => {
+//     try {
+//       const storedBookmarks = await AsyncStorage.getItem('businessBookmarks');
+//       if (storedBookmarks) {
+//         setBookmarks(new Set(JSON.parse(storedBookmarks)));
+//       }
+//     } catch (error) {
+//       console.error('Error loading bookmarks:', error);
+//     }
+//   };
+
+//   const saveBookmarks = async (updatedBookmarks: Set<number>) => {
+//     try {
+//       await AsyncStorage.setItem('businessBookmarks', JSON.stringify(Array.from(updatedBookmarks)));
+//     } catch (error) {
+//       console.error('Error saving bookmarks:', error);
+//     }
+//   };
 
 //   const handleNavigateToBooking = (id: string) => {
-//     console.log(`Attempting to navigate to booking screen for id: ${id}`);
+//     console.log(`Navigating to BookingsScreen for id: ${id}`);
 //     try {
-//       // Try using the navigate method instead of push
-//       router.navigate(`/booking/${id}`);
-//       console.log('Navigation function called successfully');
+//       router.push(`/screens/BookingsScreen?id=${id}`);
 //     } catch (error) {
 //       console.error('Navigation error:', error);
+//     }
+//   };
+
+//   const handleBookmark = (id: number, isBookmarked: boolean) => {
+//     setBookmarks(prev => {
+//       const newBookmarks = new Set(prev);
+//       if (isBookmarked) {
+//         newBookmarks.add(id);
+//       } else {
+//         newBookmarks.delete(id);
+//       }
+//       saveBookmarks(newBookmarks);
+//       return newBookmarks;
+//     });
+//   };
+
+//   const handleUserLocationUpdate = (location) => {
+//     setUserLocation([location.coords.longitude, location.coords.latitude]);
+//   };
+
+//   const handleReturnToLocation = () => {
+//     if (userLocation && cameraRef.current) {
+//       cameraRef.current.setCamera({
+//         centerCoordinate: userLocation,
+//         zoomLevel: 14,
+//         animationDuration: 2000,
+//       });
 //     }
 //   };
 
@@ -138,7 +232,15 @@ const styles = StyleSheet.create({
 //         pitchEnabled={true}
 //         rotateEnabled={true}
 //       >
-//         <Camera followUserLocation />
+//         <Camera 
+//           ref={cameraRef}
+//           followUserLocation={false}
+//           followUserMode="normal"
+//         />
+//         <UserLocation
+//           onUpdate={handleUserLocationUpdate}
+//           minDisplacement={10}
+//         />
 //         <LocationPuck
 //           puckBearingEnabled
 //           puckBearing="heading"
@@ -154,9 +256,17 @@ const styles = StyleSheet.create({
 //             price={item.price}
 //             status={item.status}
 //             onNavigateToBooking={handleNavigateToBooking}
+//             onBookmark={handleBookmark}
+//             isBookmarked={bookmarks.has(item.id)}
+//             imageUrl={item.imageUrl}
+//             distance={item.distance}
 //           />
 //         ))}
 //       </MapView>
+
+//       <TouchableOpacity style={styles.locationButton} onPress={handleReturnToLocation}>
+//         <Ionicons name="locate" size={24} color="white" />
+//       </TouchableOpacity>
 //     </View>
 //   );
 // }
@@ -168,294 +278,17 @@ const styles = StyleSheet.create({
 //   map: {
 //     flex: 1,
 //   },
-// });
-
-
-// import React from 'react';
-// import { StyleSheet, View } from 'react-native';
-// import Mapbox, { Camera, MapView, LocationPuck } from '@rnmapbox/maps';
-// import dummyData from '../app/data/dummyData'; // Adjust the path according to your project structure
-// import MapMarker from './MapMarker'; // Adjust the path as needed
-
-// const accessToken = 'pk.eyJ1IjoiZGVudmVyMCIsImEiOiJjbHpxeXU1aHMwMTk2MmxvbjRqbzRmeWpyIn0.NZ-Xjxx7L5ARWfPkDm0a6A';
-// Mapbox.setAccessToken(accessToken);
-
-// export default function Map() {
-//   return (
-//     <View style={styles.container}>
-//       <MapView
-//         style={styles.map}
-//         styleURL="mapbox://styles/mapbox/outdoors-v12"
-//         zoomEnabled={true}
-//         scrollEnabled={true}
-//         pitchEnabled={true}
-//         rotateEnabled={true}
-//       >
-//         <Camera followUserLocation />
-//         <LocationPuck
-//           puckBearingEnabled
-//           puckBearing="heading"
-//           pulsing={{ isEnabled: true }}
-//         />
-
-//         {dummyData.map((item) => (
-//           <MapMarker
-//             key={item.id}
-//             id={item.id}
-//             title={item.title}
-//             location={item.location}
-//             price={item.price}
-//             status={item.status}
-//           />
-//         ))}
-//       </MapView>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
+//   locationButton: {
+//     position: 'absolute',
+//     bottom: 16,
+//     right: 16,
+//     backgroundColor: '#007AFF',
+//     borderRadius: 30,
+//     padding: 10,
+//     elevation: 5,
+//     shadowColor: '#000',
+//     shadowOffset: { width: 0, height: 2 },
+//     shadowOpacity: 0.25,
+//     shadowRadius: 3.84,
 //   },
-//   map: {
-//     flex: 1,
-//   },
-// });
-// import React from 'react';
-// import { StyleSheet, View, Text } from 'react-native';
-// import Mapbox, { Camera, MapView, LocationPuck, MarkerView } from '@rnmapbox/maps';
-// import dummyData from '../app/data/dummyData'; // Adjust the path according to your project structure
-
-// const accessToken = 'pk.eyJ1IjoiZGVudmVyMCIsImEiOiJjbHpxeXU1aHMwMTk2MmxvbjRqbzRmeWpyIn0.NZ-Xjxx7L5ARWfPkDm0a6A';
-// Mapbox.setAccessToken(accessToken);
-
-// export default function Map() {
-//     return (
-//         <View style={styles.container}>
-//             <MapView 
-//                 style={styles.map} 
-//                 styleURL="mapbox://styles/mapbox/outdoors-v12"
-//                 zoomEnabled={true}
-//                 scrollEnabled={true}
-//                 pitchEnabled={true}
-//                 rotateEnabled={true}>
-                
-//                 <Camera followUserLocation />
-                
-//                 <LocationPuck 
-//                     puckBearingEnabled 
-//                     puckBearing="heading" 
-//                     pulsing={{ isEnabled: true }} 
-//                 />
-                
-//                 {/* Render Markers for each location in dummyData */}
-//                 {dummyData.map((item) => {
-//                     const [latitude, longitude] = item.location.split(',').map(coord => parseFloat(coord.trim()));
-
-//                     // Validate that title and location are valid
-//                     if (!item.title || isNaN(latitude) || isNaN(longitude)) {
-//                         console.error(`Invalid data for item: ${item}`);
-//                         return null; // Skip invalid data
-//                     }
-
-//                     return (
-//                         <MarkerView
-//                             key={item.id}
-//                             coordinate={[longitude, latitude]}
-//                             anchor={{ x: 0.5, y: 0.5 }}
-//                         >
-//                             <View style={styles.marker}>
-//                                 {/* Ensure text is wrapped in a <Text> component */}
-//                                 <Text>{item.title}</Text>
-//                             </View>
-//                         </MarkerView>
-//                     );
-//                 })}
-//             </MapView>
-//         </View>
-//     );
-// }
-
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//     },
-//     map: {
-//         flex: 1,
-//     },
-//     marker: {
-//         backgroundColor: 'gray',
-//         padding: 5,
-//         borderRadius: 5,
-//     },
-// });
-
-
-// import React from 'react';
-// import { StyleSheet, View, Text } from 'react-native';
-// import Mapbox, { Camera, MapView, LocationPuck, MarkerView } from '@rnmapbox/maps';
-// import dummyData from '../app/data/dummyData'; // Adjust the path according to your project structure
-
-// const accessToken = 'pk.eyJ1IjoiZGVudmVyMCIsImEiOiJjbHpxeXU1aHMwMTk2MmxvbjRqbzRmeWpyIn0.NZ-Xjxx7L5ARWfPkDm0a6A';
-// Mapbox.setAccessToken(accessToken);
-
-// export default function Map() {
-//     return (
-//         <View style={styles.container}>
-//             <MapView 
-//                 style={styles.map} 
-//                 styleURL="mapbox://styles/mapbox/outdoors-v12"
-//                 zoomEnabled={true}
-//                 scrollEnabled={true}
-//                 pitchEnabled={true}
-//                 rotateEnabled={true}>
-                
-//                 <Camera followUserLocation />
-                
-//                 <LocationPuck 
-//                     puckBearingEnabled 
-//                     puckBearing="heading" 
-//                     pulsing={{ isEnabled: true }} 
-//                 />
-                
-//                 {/* Render Markers for each location in dummyData */}
-//                 {dummyData.map((item) => {
-//                     const [latitude, longitude] = item.location.split(',').map(coord => parseFloat(coord.trim()));
-//                     return (
-//                         <MarkerView
-//                             key={item.id}
-//                             coordinate={[longitude, latitude]}
-//                             anchor={{ x: 0.5, y: 0.5 }}
-//                         >
-//                             <View style={styles.marker}>
-//                                 {/* Ensure text is wrapped in a <Text> component */}
-//                                 <Text>{item.title}</Text>
-//                             </View>
-//                         </MarkerView>
-//                     );
-//                 })}
-//             </MapView>
-//         </View>
-//     );
-// }
-
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//     },
-//     map: {
-//         flex: 1,
-//     },
-//     marker: {
-//         backgroundColor: 'gray',
-//         padding: 5,
-//         borderRadius: 5,
-//     },
-// });
-
-
-
-
-// import React from 'react';
-// import { StyleSheet, View,Text } from 'react-native';
-// import Mapbox, { Camera, MapView, LocationPuck, MarkerView } from '@rnmapbox/maps';
-// import dummyData from '../app/data/dummyData'; // Adjust the path according to your project structure
-
-// const accessToken = 'pk.eyJ1IjoiZGVudmVyMCIsImEiOiJjbHpxeXU1aHMwMTk2MmxvbjRqbzRmeWpyIn0.NZ-Xjxx7L5ARWfPkDm0a6A';
-// Mapbox.setAccessToken(accessToken);
-
-// export default function Map() {
-//     return (
-//         <View style={styles.container}>
-//             <MapView 
-//                 style={styles.map} 
-//                 styleURL="mapbox://styles/mapbox/outdoors-v12"
-//                 zoomEnabled={true}
-//                 scrollEnabled={true}
-//                 pitchEnabled={true}
-//                 rotateEnabled={true}>
-                
-//                 <Camera followUserLocation />
-                
-//                 <LocationPuck 
-//                     puckBearingEnabled 
-//                     puckBearing="heading" 
-//                     pulsing={{ isEnabled: true }} 
-//                 />
-                
-//                 {/* Render Markers for each location in dummyData */}
-//                 {dummyData.map((item) => {
-//                     const [latitude, longitude] = item.location.split(',').map(coord => parseFloat(coord.trim()));
-//                     return (
-//                         <MarkerView
-//                             key={item.id}
-//                             coordinate={[longitude, latitude]}
-//                             anchor={{ x: 0.5, y: 0.5 }}
-//                         >
-//                             <View style={styles.marker}>
-//                                 {/* Customize your marker view here */}
-//                                 <Text>{item.title}</Text>
-//                             </View>
-//                         </MarkerView>
-//                     );
-//                 })}
-//             </MapView>
-//         </View>
-//     );
-// }
-
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//     },
-//     map: {
-//         flex: 1,
-//     },
-//     marker: {
-//         backgroundColor: 'gray',
-//         padding: 5,
-//         borderRadius: 5,
-//     },
-// });
-
-
-
-
-
-
-// import React from 'react';
-// import { StyleSheet, View } from 'react-native';
-// import Mapbox, { Camera, MapView, LocationPuck } from '@rnmapbox/maps';
-
-// const accessToken = 'pk.eyJ1IjoiZGVudmVyMCIsImEiOiJjbHpxeXU1aHMwMTk2MmxvbjRqbzRmeWpyIn0.NZ-Xjxx7L5ARWfPkDm0a6A';
-// Mapbox.setAccessToken(accessToken);
-
-// export default function Map() {
-//     return (
-//         <View style={styles.container}>
-//             <MapView 
-//                 style={styles.map} 
-//                 styleURL="mapbox://styles/mapbox/outdoors-v12"
-//                 zoomEnabled={true}
-//                 scrollEnabled={true}
-//                 pitchEnabled={true}
-//                 rotateEnabled={true}>
-//                 <Camera followUserLocation /> 
-//                 <LocationPuck 
-//                     puckBearingEnabled 
-//                     puckBearing="heading" 
-//                     pulsing={{ isEnabled: true }} 
-//                 />
-//             </MapView>
-//         </View>
-//     );
-// }
-
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//     },
-//     map: {
-//         flex: 1,
-//     },
 // });
