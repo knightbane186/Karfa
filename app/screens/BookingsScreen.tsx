@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,7 +6,6 @@ import CustomButton from '@/components/CustomButton';
 import { router, useLocalSearchParams } from 'expo-router';
 import { BookingState, calculateTotalPrice, getConfirmButtonText, isBookingValid } from '../search/bookingLogic';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import dummyData from '../data/dummyData';
 import { useBookmarks } from '@/hooks/useBookmarks';
 
@@ -25,53 +23,56 @@ const BookingsScreen = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [courtData, setCourtData] = useState(null);
 
-  useEffect(() => {
-    loadCourtData();
-    setBookmarked(isBookmarked(Number(id)));
-  }, [id, isBookmarked]);
-
-  const loadCourtData = () => {
+  const loadCourtData = useCallback(() => {
     const court = dummyData.find(item => item.id.toString() === id);
     if (court) {
       setCourtData(court);
       setBookingState(prev => ({ ...prev, pricePerPerson: court.price }));
     }
-  };
+  }, [id]);
 
-  const handleBookmarkToggle = async () => {
+  useEffect(() => {
+    loadCourtData();
+  }, [loadCourtData]);
+
+  useEffect(() => {
+    setBookmarked(isBookmarked(Number(id)));
+  }, [id, isBookmarked]);
+
+  const handleBookmarkToggle = useCallback(async () => {
     await toggleBookmark(Number(id));
     setBookmarked(prev => !prev);
-  };
+  }, [id, toggleBookmark]);
 
   const handleGoBack = () => {
     router.back();
   };
 
-  const handlePeopleChange = (change: number) => {
+  const handlePeopleChange = useCallback((change: number) => {
     setBookingState(prev => ({
       ...prev,
       selectedPeople: Math.max(0, prev.selectedPeople + change)
     }));
-  };
+  }, []);
 
-  const handleSlotToggle = (slot: string) => {
+  const handleSlotToggle = useCallback((slot: string) => {
     setBookingState(prev => {
       const newSlots = prev.selectedSlots.includes(slot)
         ? prev.selectedSlots.filter(s => s !== slot)
         : [...prev.selectedSlots, slot];
       return { ...prev, selectedSlots: newSlots };
     });
-  };
+  }, []);
 
   const handleConfirmBooking = () => {
     setModalVisible(true);
   };
 
-  const handleDateChange = (event, selectedDate) => {
+  const handleDateChange = useCallback((event, selectedDate) => {
     const currentDate = selectedDate || bookingState.selectedDate;
     setShowDatePicker(Platform.OS === 'ios');
     setBookingState(prev => ({ ...prev, selectedDate: currentDate }));
-  };
+  }, [bookingState.selectedDate]);
 
   const availableSlots = ['7 am', '9 am', '11 am', '12 pm', '3 pm', '5 pm', '9 pm', '10 pm'];
 
@@ -206,6 +207,7 @@ const BookingsScreen = () => {
     </SafeAreaView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
