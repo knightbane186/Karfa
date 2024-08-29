@@ -1,4 +1,4 @@
-import dummyData from '../data/dummyData';
+import dummyData from '../data/BdummyData';
 
 const searchLogic = (
   query: string, 

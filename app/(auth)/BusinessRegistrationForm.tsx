@@ -1,16 +1,32 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet, Alert } from 'react-native';
 import CustomButton from '@/components/CustomButton';
+import { useRouter } from 'expo-router';
+import { addUser } from '../data/UdummyData';
 
-const BusinessRegistrationForm = () => {
+const BusinessRegistrationForm = ({ onSuccess }) => {
   const [username, setUsername] = useState('');
+  const [businessName, setBusinessName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
-  const [abnNumber, setAbnNumber] = useState('');
-  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const handleRegister = () => {
-    // Implement registration logic here
-    console.log('Business user registration:', { username, mobileNumber, abnNumber, email });
+    if (username && businessName && mobileNumber && password) {
+      const newUser = {
+        id: Date.now().toString(),
+        username,
+        password,
+        name: businessName,
+        mobileNumber,
+        accountType: 'business',
+      };
+      addUser(newUser);
+      Alert.alert('Success', 'Business registration successful!');
+      onSuccess();
+    } else {
+      Alert.alert('Error', 'Please fill in all fields');
+    }
   };
 
   return (
@@ -23,6 +39,12 @@ const BusinessRegistrationForm = () => {
       />
       <TextInput
         style={styles.input}
+        placeholder="Business Name"
+        value={businessName}
+        onChangeText={setBusinessName}
+      />
+      <TextInput
+        style={styles.input}
         placeholder="Mobile Number"
         value={mobileNumber}
         onChangeText={setMobileNumber}
@@ -30,16 +52,10 @@ const BusinessRegistrationForm = () => {
       />
       <TextInput
         style={styles.input}
-        placeholder="ABN Number"
-        value={abnNumber}
-        onChangeText={setAbnNumber}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry={true}
       />
       <CustomButton
         title="Register"

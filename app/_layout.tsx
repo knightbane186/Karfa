@@ -29,11 +29,13 @@ const RootLayout = () => {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="register" options={{ headerShown: false }} />
         <Stack.Screen name="bookings" options={{ headerShown: false }} />
+        <Stack.Screen name="screens/Settings" options={{ headerShown: false }} />
         <Stack.Screen name="LoginScreen" options={{ headerShown: false }} />
         <Stack.Screen 
           name="screens/BookMarks" 
           options={{ headerShown: false }} 
         />
+
         <Stack.Screen
           name="screens/BookingsScreen"
           options={{

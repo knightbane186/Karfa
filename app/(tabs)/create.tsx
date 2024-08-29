@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, FlatList, View, Animated, Dimensions } from 'react-native';
 import CountCard from '@/components/CountCard';
-import dummyData from '../data/dummyData';
+import dummyData from '../data/BdummyData';
 import searchLogic from '../search/SearchLogic';
 import ParameterCard from '@/components/ParameterCard';
 

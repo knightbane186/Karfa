@@ -1,21 +1,26 @@
-
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import AccountTypeSelector from '@/components/AccountTypeSelector';
 import NormalRegistrationForm from './NormalRegistrationForm';
 import BusinessRegistrationForm from './BusinessRegistrationForm';
+import { useRouter } from 'expo-router';
 
 const RegistrationFlow = () => {
   const [accountType, setAccountType] = useState<'normal' | 'business' | null>(null);
+  const router = useRouter();
+
+  const handleRegistrationSuccess = () => {
+    router.replace('/(tabs)');
+  };
 
   return (
     <View style={styles.container}>
       {!accountType ? (
         <AccountTypeSelector onSelect={setAccountType} />
       ) : accountType === 'normal' ? (
-        <NormalRegistrationForm />
+        <NormalRegistrationForm onSuccess={handleRegistrationSuccess} />
       ) : (
-        <BusinessRegistrationForm />
+        <BusinessRegistrationForm onSuccess={handleRegistrationSuccess} />
       )}
     </View>
   );
@@ -30,31 +35,3 @@ const styles = StyleSheet.create({
 });
 
 export default RegistrationFlow;
-
-
-
-// import React, { useState } from 'react';
-// import { View } from 'react-native';
-// import AccountTypeSelector from '@/components/AccountTypeSelector';
-// import NormalRegistrationForm from './NormalRegistrationForm';
-// import BusinessRegistrationForm from './BusinessRegistrationForm';
-
-// const RegistrationFlow = () => {
-//   const [accountType, setAccountType] = useState<'normal' | 'business' | null>(null);
-
-//   if (!accountType) {
-//     return <AccountTypeSelector onSelect={setAccountType} />;
-//   }
-
-//   return (
-//     <View style={{ flex: 1 }}>
-//       {accountType === 'normal' ? (
-//         <NormalRegistrationForm />
-//       ) : (
-//         <BusinessRegistrationForm />
-//       )}
-//     </View>
-//   );
-// };
-
-// export default RegistrationFlow;

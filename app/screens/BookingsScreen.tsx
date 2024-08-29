@@ -6,7 +6,7 @@ import CustomButton from '@/components/CustomButton';
 import { router, useLocalSearchParams } from 'expo-router';
 import { BookingState, calculateTotalPrice, getConfirmButtonText, isBookingValid } from '../search/bookingLogic';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import dummyData from '../data/dummyData';
+import dummyData from '../data/BdummyData';
 import { useBookmarks } from '@/hooks/useBookmarks';
 
 const BookingsScreen = () => {

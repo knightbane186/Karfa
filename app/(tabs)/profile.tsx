@@ -13,7 +13,9 @@ const Profile = () => {
     <ScrollView style={styles.container}>
       {/* Header with icons */}
       <View style={styles.headerIcons}>
-        <Ionicons name="settings-outline" size={24} color="black" />
+        <TouchableOpacity onPress={() => router.push('/screens/Settings')}>
+          <Ionicons name="settings-outline" size={24} color="black" />
+        </TouchableOpacity>
         <View style={styles.headerButtons}>
           <Ionicons name="create-outline" size={24} color="black" />
           <TouchableOpacity onPress={() => router.push('/screens/BookMarks')}>

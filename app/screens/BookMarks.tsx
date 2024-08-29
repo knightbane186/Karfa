@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import CountCard from '@/components/CountCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import dummyData from '../data/dummyData';
+import dummyData from '../data/BdummyData';
 
 interface BusinessData {
   id: number;

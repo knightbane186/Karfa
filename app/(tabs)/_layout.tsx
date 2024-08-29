@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, FlatList, Text, StyleSheet, Image, Keyboard } from 'react-native';
 import { Tabs, usePathname, useRouter } from 'expo-router';
 import { icons } from '@/constants';
-import dummyData from '../data/dummyData';
+import dummyData from '../data/BdummyData';
 import CountCard from '@/components/CountCard';
 import searchLogic from '../search/SearchLogic';
 import GridButton from '@/components/GridButton';

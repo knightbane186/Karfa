@@ -3,7 +3,7 @@ import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import Mapbox, { Camera, MapView, LocationPuck, UserLocation } from '@rnmapbox/maps';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import dummyData from '../app/data/dummyData';
+import dummyData from '../app/data/BdummyData';
 import MapMarker from './MapMarker';
 import { Ionicons } from '@expo/vector-icons';
 
