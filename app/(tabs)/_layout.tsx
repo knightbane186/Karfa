@@ -47,6 +47,7 @@ const CustomHeader = ({ onSearch, showParameters, setShowParameters, isSearching
         <View style={styles.searchContainer}>
           <TextInput
             placeholder="Location, User, or Activity"
+            placeholderTextColor="#999"
             style={styles.searchInput}
             onFocus={handleFocus}
             value={searchQuery}
@@ -210,6 +211,7 @@ const styles = StyleSheet.create({
   searchIcon: {
     width: 20,
     height: 20,
+    right:2,
     tintColor: '#ffa001',
   },
   listWrapper: {
