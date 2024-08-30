@@ -13,6 +13,7 @@ const dummyData = [
     location: '-37.824110,144.963200',
     openTime: 8,
     closeTime: 21,
+    suburb: 'melbourne'
   },
   {
     id: 2,
@@ -27,6 +28,7 @@ const dummyData = [
     location: '-37.824540,144.964290',
     openTime: 9,
     closeTime: 22,
+    suburb: 'melbourne'
   },
   // ... (other items remain the same, just update price, openTime, and closeTime)
   {
@@ -42,6 +44,7 @@ const dummyData = [
     location: '-37.813020,144.978110',
     openTime: 9,
     closeTime: 17,
+    suburb: 'melbourne'
   },
   {
     id: 14,
@@ -56,6 +59,7 @@ const dummyData = [
     location: '-37.824110,144.963200',
     openTime: 7,
     closeTime: 8,
+    suburb: 'glen'
   },
 ];
 

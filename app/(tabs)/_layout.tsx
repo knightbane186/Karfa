@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { View, TextInput, TouchableOpacity, FlatList, Text, StyleSheet, Image, Keyboard, Animated, TouchableWithoutFeedback } from 'react-native';
 import { Tabs, usePathname, useRouter } from 'expo-router';
@@ -28,8 +29,8 @@ const TabIcon = ({ icon, focused }) => (
 const CustomHeader = ({ onSearch, showParameters, setShowParameters, isSearching, setIsSearching, searchQuery, setSearchQuery }) => {
   const router = useRouter();
 
-  const handleSearch = (maxPrice: number, selectedDate: Date, availability: string, selectedTime: number) => {
-    onSearch(searchQuery, maxPrice, selectedDate, availability, selectedTime);
+  const handleSearch = (maxPrice: number, selectedDate: Date, availability: string, selectedTime: number, suburb: string) => {
+    onSearch(searchQuery, maxPrice, selectedDate, availability, selectedTime, suburb);
     setShowParameters(false);
     setIsSearching(true);
     Keyboard.dismiss();
@@ -84,8 +85,8 @@ const TabsLayout = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const pathname = usePathname();
 
-  const handleSearch = (query: string, maxPrice: number, date: Date, availability: string, selectedTime: number) => {
-    const filtered = searchLogic(query, maxPrice, date, availability, selectedTime);
+  const handleSearch = (query: string, maxPrice: number, date: Date, availability: string, selectedTime: number, suburb: string) => {
+    const filtered = searchLogic(query, maxPrice, date, availability, selectedTime, suburb);
     setFilteredData(filtered);
     setIsSearching(true);
     setShowParameters(false);
@@ -207,11 +208,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 5,
     fontSize: 16,
+    color: 'black',
   },
   searchIcon: {
     width: 20,
     height: 20,
-    right:2,
     tintColor: '#ffa001',
   },
   listWrapper: {
@@ -271,8 +272,8 @@ export default TabsLayout;
 
 
 
-// import React, { useState,useEffect, useRef } from 'react';
-// import { View, TextInput, TouchableOpacity, FlatList, Text, StyleSheet, Image, Keyboard, Animated } from 'react-native';
+// import React, { useState, useEffect, useRef } from 'react';
+// import { View, TextInput, TouchableOpacity, FlatList, Text, StyleSheet, Image, Keyboard, Animated, TouchableWithoutFeedback } from 'react-native';
 // import { Tabs, usePathname, useRouter } from 'expo-router';
 // import { icons } from '@/constants';
 // import dummyData from '../data/BdummyData';
@@ -280,7 +281,6 @@ export default TabsLayout;
 // import searchLogic from '../search/SearchLogic';
 // import GridButton from '@/components/GridButton';
 // import ParameterCard from '@/components/ParameterCard';
-
 
 // interface TabIconProps {
 //   icon: any;
@@ -298,6 +298,7 @@ export default TabsLayout;
 //     />
 //   </View>
 // );
+
 // const CustomHeader = ({ onSearch, showParameters, setShowParameters, isSearching, setIsSearching, searchQuery, setSearchQuery }) => {
 //   const router = useRouter();
 
@@ -320,6 +321,7 @@ export default TabsLayout;
 //         <View style={styles.searchContainer}>
 //           <TextInput
 //             placeholder="Location, User, or Activity"
+//             placeholderTextColor="#999"
 //             style={styles.searchInput}
 //             onFocus={handleFocus}
 //             value={searchQuery}
@@ -365,79 +367,87 @@ export default TabsLayout;
 
 //   const showHeader = ['/home', '/create'].includes(pathname);
 
+//   const handleMapPress = () => {
+//     if (showParameters) {
+//       setShowParameters(false);
+//     }
+//   };
+
 //   return (
-//     <View style={styles.container}>
-//       {showHeader && (
-//         <CustomHeader
-//           onSearch={handleSearch}
-//           showParameters={showParameters}
-//           setShowParameters={setShowParameters}
-//           isSearching={isSearching}
-//           setIsSearching={setIsSearching}
-//           searchQuery={searchQuery}
-//           setSearchQuery={setSearchQuery}
-//         />
-//       )}
-
-//       {isSearching && pathname === '/create' && (
-//         <View style={styles.listWrapper}>
-//           <FlatList
-//             data={filteredData}
-//             keyExtractor={(item) => item.id.toString()}
-//             renderItem={({ item }) => (
-//               <CountCard
-//                 imageUrl={item.imageUrl}
-//                 title={item.title}
-//                 distance={item.distance}
-//                 status={item.status}
-//                 price={item.price}
-//               />
-//             )}
-//             contentContainerStyle={styles.listContainer}
+//     <TouchableWithoutFeedback onPress={handleMapPress}>
+//       <View style={styles.container}>
+//         {showHeader && (
+//           <CustomHeader
+//             onSearch={handleSearch}
+//             showParameters={showParameters}
+//             setShowParameters={setShowParameters}
+//             isSearching={isSearching}
+//             setIsSearching={setIsSearching}
+//             searchQuery={searchQuery}
+//             setSearchQuery={setSearchQuery}
 //           />
-//         </View>
-//       )}
+//         )}
 
-//       <Tabs
-//         screenOptions={{
-//           tabBarShowLabel: false,
-//           tabBarStyle: styles.tabBarStyle,
-//         }}
-//       >
-//         <Tabs.Screen
-//           name="home"
-//           options={{
-//             title: 'Home',
-//             headerShown: false,
-//             tabBarIcon: ({ focused }) => <TabIcon icon={icons.home} color={focused ? '#ffffff' : '#38c184'} name="Home" focused={focused} />,
+//         {isSearching && pathname === '/create' && (
+//           <View style={styles.listWrapper}>
+//             <FlatList
+//               data={filteredData}
+//               keyExtractor={(item) => item.id.toString()}
+//               renderItem={({ item }) => (
+//                 <CountCard
+//                   imageUrl={item.imageUrl}
+//                   title={item.title}
+//                   distance={item.distance}
+//                   status={item.status}
+//                   price={item.price}
+//                 />
+//               )}
+//               contentContainerStyle={styles.listContainer}
+//             />
+//           </View>
+//         )}
+
+//         <Tabs
+//           screenOptions={{
+//             tabBarShowLabel: false,
+//             tabBarStyle: styles.tabBarStyle,
 //           }}
-//         />
-//         <Tabs.Screen
-//           name="create"
-//           options={{
-//             title: 'Create',
-//             headerShown: false,
-//             tabBarIcon: ({ focused }) => <TabIcon icon={icons.search} color={focused ? '#ffffff' : '#38c184'} name="Search" focused={focused} />,
-//           }}
-//         />
-//         <Tabs.Screen
-//           name="profile"
-//           options={{
-//             title: 'Profile',
-//             headerShown: false,
-//             tabBarIcon: ({ focused }) => <TabIcon icon={icons.profile} color={focused ? '#ffffff' : '#38c184'} name="Profile" focused={focused} />,
-//           }}
-//         />
-//         <Tabs.Screen
-//           name="inbox"
-//           options={{
-//             title: 'Inbox',
-//             headerShown: false,
-//             tabBarIcon: ({ focused }) => <TabIcon icon={icons.play} color={focused ? '#ffffff' : '#38c184'} name="Inbox" focused={focused} />,
-//           }}
-//         />
-//       </Tabs>
-//     </View>
+//         >
+//           <Tabs.Screen
+//             name="home"
+//             options={{
+//               title: 'Home',
+//               headerShown: false,
+//               tabBarIcon: ({ focused }) => <TabIcon icon={icons.home} color={focused ? '#ffffff' : '#38c184'} name="Home" focused={focused} />,
+//             }}
+//           />
+//           <Tabs.Screen
+//             name="create"
+//             options={{
+//               title: 'Create',
+//               headerShown: false,
+//               tabBarIcon: ({ focused }) => <TabIcon icon={icons.search} color={focused ? '#ffffff' : '#38c184'} name="Search" focused={focused} />,
+//             }}
+//           />
+//           <Tabs.Screen
+//             name="profile"
+//             options={{
+//               title: 'Profile',
+//               headerShown: false,
+//               tabBarIcon: ({ focused }) => <TabIcon icon={icons.profile} color={focused ? '#ffffff' : '#38c184'} name="Profile" focused={focused} />,
+//             }}
+//           />
+//           <Tabs.Screen
+//             name="inbox"
+//             options={{
+//               title: 'Inbox',
+//               headerShown: false,
+//               tabBarIcon: ({ focused }) => <TabIcon icon={icons.play} color={focused ? '#ffffff' : '#38c184'} name="Inbox" focused={focused} />,
+//             }}
+//           />
+//         </Tabs>
+//       </View>
+//     </TouchableWithoutFeedback>
 //   );
 // };
 
@@ -475,6 +485,7 @@ export default TabsLayout;
 //   searchIcon: {
 //     width: 20,
 //     height: 20,
+//     right:2,
 //     tintColor: '#ffa001',
 //   },
 //   listWrapper: {
@@ -493,7 +504,7 @@ export default TabsLayout;
 //   },
 //   tabBarStyle: {
 //     position: 'absolute',
-//     paddingBottom:1,
+//     paddingBottom: 1,
 //     bottom: 40,
 //     left: 45,
 //     right: 45,
@@ -505,7 +516,6 @@ export default TabsLayout;
 //     flexDirection: 'row',
 //     justifyContent: 'space-between',
 //     alignItems: 'center',
-//     // paddingHorizontal: 0, // Remove horizontal padding
 //   },
 //   tabIconContainer: {
 //     width: 60,
@@ -515,10 +525,9 @@ export default TabsLayout;
 //   },
 //   focusedTabIcon: {
 //     backgroundColor: '#38c184',
-//     width: 56, // Match the container size
-//     height: 56, // Match the container size
+//     width: 56,
+//     height: 56,
 //     borderRadius: 30,
-//      // Half of the width/height for a perfect circle
 //     justifyContent: 'center',
 //     alignItems: 'center',
 //   },
