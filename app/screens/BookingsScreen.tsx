@@ -8,16 +8,17 @@ import { BookingState, calculateTotalPrice, getConfirmButtonText, isBookingValid
 import DateTimePicker from '@react-native-community/datetimepicker';
 import dummyData from '../data/BdummyData';
 import { useBookmarks } from '@/hooks/useBookmarks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BookingsScreen = () => {
-  const { id } = useLocalSearchParams();
+  const { id, date, time, people } = useLocalSearchParams();
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const [bookmarked, setBookmarked] = useState(false);
   const [bookingState, setBookingState] = useState<BookingState>({
     pricePerPerson: 10,
-    selectedPeople: 0,
-    selectedSlots: [],
-    selectedDate: new Date(),
+    selectedPeople: Number(people) || 0,
+    selectedSlots: time ? [time.toString()] : [],
+    selectedDate: date ? new Date(date) : new Date(),
   });
   const [modalVisible, setModalVisible] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -64,8 +65,30 @@ const BookingsScreen = () => {
     });
   }, []);
 
-  const handleConfirmBooking = () => {
-    setModalVisible(true);
+  const handleConfirmBooking = async () => {
+    if (courtData) {
+      try {
+        const newBooking = {
+          id: courtData.id,
+          title: courtData.title,
+          distance: courtData.distance,
+          price: courtData.price,
+          date: bookingState.selectedDate,
+          people: bookingState.selectedPeople,
+          slots: bookingState.selectedSlots,
+        };
+
+        const existingBookingsJson = await AsyncStorage.getItem('savedBookings');
+        const existingBookings = existingBookingsJson ? JSON.parse(existingBookingsJson) : [];
+        
+        const updatedBookings = [...existingBookings, newBooking];
+        await AsyncStorage.setItem('savedBookings', JSON.stringify(updatedBookings));
+
+        setModalVisible(true);
+      } catch (error) {
+        console.error('Error saving booking:', error);
+      }
+    }
   };
 
   const handleDateChange = useCallback((event, selectedDate) => {
@@ -186,8 +209,7 @@ const BookingsScreen = () => {
               title="My Bookings"
               handlePress={() => {
                 setModalVisible(false);
-                // Navigate to My Bookings screen
-                // router.push('/myBookings');
+                router.push('/screens/BookingSaved');
               }}
               containerStyles={styles.modalButton}
               textStyles={styles.modalButtonText}
@@ -207,7 +229,6 @@ const BookingsScreen = () => {
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -368,3 +389,139 @@ const styles = StyleSheet.create({
 });
 
 export default BookingsScreen;
+//   },
+//   bookmarkButton: {
+//     marginLeft: 15,
+//   },
+//   infoContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     padding: 20,
+//   },
+//   infoItem: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//   },
+//   infoText: {
+//     color: 'white',
+//     marginLeft: 10,
+//   },
+//   bookingSection: {
+//     padding: 20,
+//   },
+//   sectionTitle: {
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//     color: 'white',
+//     marginBottom: 10,
+//   },
+//   input: {
+//     backgroundColor: '#1E1E1E',
+//     padding: 15,
+//     borderRadius: 8,
+//     marginBottom: 20,
+//   },
+//   inputText: {
+//     color: 'white',
+//   },
+//   slotsContainer: {
+//     flexDirection: 'row',
+//     flexWrap: 'wrap',
+//     justifyContent: 'space-between',
+//   },
+//   slotButton: {
+//     backgroundColor: '#1E1E1E',
+//     padding: 10,
+//     borderRadius: 8,
+//     width: '23%',
+//     alignItems: 'center',
+//     marginBottom: 10,
+//   },
+//   selectedSlot: {
+//     backgroundColor: '#82EE16',
+//   },
+//   slotText: {
+//     color: 'white',
+//   },
+//   selectedSlotText: {
+//     color: 'black',
+//   },
+//   footer: {
+//     padding: 20,
+//   },
+//   confirmButton: {
+//     backgroundColor: '#82EE16',
+//     borderRadius: 8,
+//     padding: 15,
+//   },
+//   confirmButtonText: {
+//     color: 'black',
+//     fontWeight: 'bold',
+//     textAlign: 'center',
+//   },
+//   peopleSelector: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'space-between',
+//     backgroundColor: '#1E1E1E',
+//     padding: 15,
+//     borderRadius: 8,
+//     marginBottom: 20,
+//   },
+//   peopleCount: {
+//     color: 'white',
+//     fontSize: 18,
+//   },
+//   centeredView: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+//   },
+//   modalView: {
+//     margin: 20,
+//     backgroundColor: 'white',
+//     borderRadius: 20,
+//     padding: 35,
+//     alignItems: 'center',
+//     shadowColor: '#000',
+//     shadowOffset: {
+//       width: 0,
+//       height: 2
+//     },
+//     shadowOpacity: 0.25,
+//     shadowRadius: 4,
+//     elevation: 5
+//   },
+//   modalTitle: {
+//     fontSize: 24,
+//     fontWeight: 'bold',
+//     marginBottom: 15,
+//     textAlign: 'center',
+//   },
+//   modalText: {
+//     marginBottom: 15,
+//     textAlign: 'center',
+//     fontSize: 16,
+//   },
+//   modalButton: {
+//     backgroundColor: '#82EE16',
+//     borderRadius: 8,
+//     padding: 10,
+//     elevation: 2,
+//     marginTop: 10,
+//     minWidth: 150,
+//   },
+//   modalButtonText: {
+//     color: 'black',
+//     fontWeight: 'bold',
+//     textAlign: 'center',
+//   },
+//   doneButton: {
+//     backgroundColor: '#f0f0f0',
+//   },
+// });
+
+// export default BookingsScreen;
+
+
