@@ -8,6 +8,9 @@ import CountCard from '@/components/CountCard';
 import searchLogic from '../search/SearchLogic';
 import GridButton from '@/components/GridButton';
 import ParameterCard from '@/components/ParameterCard';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+
 
 interface TabIconProps {
   icon: any;
@@ -42,6 +45,7 @@ const CustomHeader = ({ onSearch, showParameters, setShowParameters, isSearching
     setIsSearching(false);
   };
 
+ 
   return (
     <View style={styles.headerContainer}>
       <View style={styles.searchRow}>
